@@ -1,376 +1,386 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Live Situation Room &amp; Polling Unit Results | Nnadozie Chikezie 2027</title>
-<meta name="description" content="Unofficial campaign situation room collation and polling unit tracker for Owerri Federal Constituency 2027.">
-<link rel="icon" href="assets/zlp-logo.jpg">
-<link rel="stylesheet" href="style.css">
-<style>
-  .notice-banner {
-    background: #fefce8;
-    border: 1px solid #fde047;
-    color: #713f12;
-    padding: 14px 18px;
-    border-radius: 12px;
-    font-size: 0.92rem;
-    margin-bottom: 24px;
-    line-height: 1.5;
-  }
-  .tally-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 14px;
-    margin-bottom: 28px;
-  }
-  .tally-card {
-    background: #fff;
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.04);
-  }
-  .tally-card.highlight {
-    border: 2px solid #15803d;
-    background: #f0fdf4;
-  }
-  .tally-party {
-    font-weight: 700;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    opacity: 0.8;
-  }
-  .tally-votes {
-    font-size: 1.75rem;
-    font-weight: 800;
-    margin: 4px 0;
-  }
-  .tally-pct {
-    font-size: 0.85rem;
-    font-weight: 600;
-    opacity: 0.75;
-  }
-  .filter-bar {
-    background: #fff;
-    padding: 20px;
-    border-radius: 14px;
-    border: 1px solid rgba(0,0,0,0.1);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 14px;
-    margin-bottom: 24px;
-  }
-  .filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .filter-group label {
-    font-weight: 600;
-    font-size: 0.9rem;
-  }
-  .filter-group select,
-  .filter-group input {
-    padding: 11px 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    font: inherit;
-    font-size: 0.98rem;
-    background: #fff;
-  }
-  .pu-list {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  .pu-card {
-    background: #fff;
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 12px;
-    padding: 18px 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-  }
-  .pu-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-  }
-  .pu-title {
-    font-weight: 700;
-    font-size: 1.05rem;
-    margin: 0 0 4px;
-  }
-  .pu-meta {
-    font-size: 0.88rem;
-    opacity: 0.78;
-  }
-  .badge {
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 700;
-  }
-  .badge-reported { background: #dcfce7; color: #166534; }
-  .badge-pending { background: #f1f5f9; color: #475569; }
-  .pu-scores {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    background: #f8fafc;
-    padding: 10px;
-    border-radius: 8px;
-    text-align: center;
-  }
-  .pu-score-item span {
-    display: block;
-    font-size: 0.78rem;
-    font-weight: 700;
-    opacity: 0.75;
-  }
-  .pu-score-item strong {
-    font-size: 1.05rem;
-  }
-  .ec8a-btn {
-    display: inline-block;
-    margin-top: 12px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: underline;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2027 Situation Room — Hon. Nnadozie Chikezie | Owerri Federal Constituency</title>
+  <link rel="preconnect" href="https://googleapis.com" />
+  <link rel="preconnect" href="https://gstatic.com" crossorigin />
+  <link href="https://googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #0b6e35;
+      --green-dark: #074f26;
+      --green-soft: #eef8f1;
+      --gold: #eab308;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+      --white: #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .nav-wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .brand img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+    .brand-title {
+      font-weight: 800;
+      font-size: 1.05rem;
+      line-height: 1.15;
+    }
+    .brand-sub {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--green);
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--green); }
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px 16px 60px;
+    }
+    .disclaimer {
+      background: #fefce8;
+      border: 1px solid #fde047;
+      color: #713f12;
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .status-line {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .btn-refresh {
+      background: var(--white);
+      border: 1.5px solid #cbd5e1;
+      color: var(--text);
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .btn-refresh:hover { border-color: var(--green); color: var(--green); }
+    .party-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .party-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .party-card.zlp {
+      background: var(--green-soft);
+      border-color: var(--green);
+    }
+    .party-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .party-card.zlp .party-name { color: var(--green-dark); }
+    .party-votes {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .party-pct {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .filters {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .filters select, .filters input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: var(--white);
+    }
+    .pu-list {
+      display: grid;
+      gap: 14px;
+    }
+    .pu-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr 165px;
+      gap: 16px;
+      align-items: center;
+    }
+    @media (max-width: 640px) {
+      .pu-card {
+        grid-template-columns: 1fr 118px;
+        gap: 12px;
+        padding: 14px;
+      }
+    }
+    .pu-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .badge-lga { background: #e2e8f0; color: #1e293b; }
+    .badge-verified { background: #dcfce7; color: #166534; }
+    .badge-pending { background: #f1f5f9; color: #64748b; }
+    .pu-title {
+      font-weight: 700;
+      font-size: 0.98rem;
+      margin-bottom: 2px;
+    }
+    .pu-code {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .pu-scores {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .score-pill {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 9px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .score-pill.zlp {
+      background: var(--green-soft);
+      border-color: var(--green);
+      color: var(--green-dark);
+    }
+    .ec8a-side {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .ec8a-thumb-btn {
+      width: 100%;
+      border: 1.5px solid var(--green);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #f1f5f9;
+      cursor: pointer;
+      padding: 0;
+      display: block;
+    }
+    .ec8a-thumb-btn img {
+      width: 100%;
+      height: 115px;
+      object-fit: cover;
+      display: block;
+    }
+    .ec8a-caption {
+      background: var(--green);
+      color: var(--white);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 6px;
+    }
+    .ec8a-empty {
+      width: 100%;
+      height: 115px;
+      border: 1.5px dashed #cbd5e1;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      color: #94a3b8;
+      font-size: 0.74rem;
+      font-weight: 600;
+      background: #f8fafc;
+    }
+    /* Fullscreen Lightbox Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.92);
+      z-index: 100;
+      padding: 16px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.open { display: flex; }
+    .modal-top {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--white);
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+    .modal-close {
+      background: var(--white);
+      color: var(--text);
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .modal img {
+      max-width: 100%;
+      max-height: 78vh;
+      border-radius: 10px;
+      object-fit: contain;
+      background: #000;
+    }
+    .modal-link {
+      margin-top: 10px;
+      color: #fde047;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .page-btn {
+      background: var(--white);
+      border: 1px solid #cbd5e1;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .page-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  </style>
 </head>
 <body>
-<header class="site-header">
-  <div class="container nav">
-    <a class="brand" href="index.html">
-      <img src="assets/zlp-logo.jpg" alt="ZLP logo" width="48" height="48">
-      <span>Nnadozie Chikezie<small>OWERRI FEDERAL CONSTITUENCY · 2027</small></span>
-    </a>
-    <button class="menu-btn" aria-label="Open navigation">☰</button>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="index.html#gallery">Gallery</a>
-      <a href="index.html#wards">INEC Wards</a>
-      <a href="results.html">Situation Room</a>
-      <a href="index.html#questions">Ask a Question</a>
-      <a href="disclaimer.html">Disclaimer</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-<section class="section alt">
-  <div class="container">
-    <div class="section-head">
-      <div class="eyebrow">Campaign Situation Room</div>
-      <h2>Polling Unit Results Tracker</h2>
-      <p class="lead">Follow polling-unit-by-polling-unit collation across Owerri Municipal, Owerri North, and Owerri West LGAs.</p>
-    </div>
-
-    <div class="notice-banner" role="note">
-      <strong>Official Compliance Notice:</strong> Figures displayed on this page represent unofficial campaign situation-room tallies compiled from agent Form EC8A reports. Only the <strong>Independent National Electoral Commission (INEC)</strong> is legally empowered to announce and declare official election results.
-    </div>
-
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
-      <strong id="pu-progress">Loading situation room feed...</strong>
-      <button type="button" id="refresh-btn" class="btn btn-secondary" style="padding:8px 14px; font-size:0.9rem;">↻ Refresh Live Figures</button>
-    </div>
-
-    <div class="tally-grid" id="tally-grid"></div>
-
-    <div class="filter-bar">
-      <div class="filter-group">
-        <label for="filter-lga">1. Filter by LGA</label>
-        <select id="filter-lga">
-          <option value="">All LGAs (33 Wards)</option>
-          <option value="Owerri Municipal">Owerri Municipal</option>
-          <option value="Owerri North">Owerri North</option>
-          <option value="Owerri West">Owerri West</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label for="filter-ward">2. Filter by INEC Ward</label>
-        <select id="filter-ward">
-          <option value="">All Wards</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label for="filter-status">3. Status</label>
-        <select id="filter-status">
-          <option value="">All Polling Units</option>
-          <option value="Reported">Reported Only</option>
-          <option value="Pending">Pending Only</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label for="filter-search">4. Search Polling Unit / Code</label>
-        <input id="filter-search" type="text" placeholder="e.g. Naze or 16-24-08...">
-      </div>
-    </div>
-
-    <div class="pu-list" id="pu-list"></div>
-  </div>
-</section>
-</main>
-
-<footer class="site-footer">
-  <div class="container footer-grid">
-    <div><h3>Nnadozie Chikezie</h3><p>Campaign website for Nnadozie Chikezie, candidate for the Federal House of Representatives, Owerri Federal Constituency, 2027.</p></div>
-    <div><h3>Explore</h3><p><a href="index.html">Home</a></p><p><a href="about.html">About the Candidate</a></p><p><a href="results.html">Situation Room Tracker</a></p><p><a href="index.html#questions">Ask a Question</a></p></div>
-    <div><h3>Transparency</h3><p><a href="disclaimer.html">Advertising Disclaimer</a></p></div>
-  </div>
-  <div class="container copyright">© 2027 Nnadozie Chikezie Campaign Organization. All rights reserved.</div>
-</footer>
-
-<script>
-const SHEET_CSV_URL = 'https://docs.' + 'google' + '.com/spreadsheets/d/1En7vVTjjZXweO59hLAkGLRitzKY8wc7sxWOO_oDlia4/gviz/tq?tqx=out:csv';
-  
-let allRows = [];
-
-function parseCSV(text) {
-  const rows = [];
-  let row = [], cell = '', inQuotes = false;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i], next = text[i + 1];
-    if (ch === '"' && inQuotes && next === '"') { cell += '"'; i++; }
-    else if (ch === '"') { inQuotes = !inQuotes; }
-    else if (ch === ',' && !inQuotes) { row.push(cell.trim()); cell = ''; }
-    else if ((ch === '\n' || (ch === '\r' && next === '\n')) && !inQuotes) {
-      if (ch === '\r') i++;
-      row.push(cell.trim());
-      if (row.some(c => c !== '')) rows.push(row);
-      row = []; cell = '';
-    } else { cell += ch; }
-  }
-  if (cell.length || row.length) { row.push(cell.trim()); rows.push(row); }
-  return rows;
-}
-
-function num(val) {
-  const n = parseInt((val || '0').replace(/[^0-9]/g, ''), 10);
-  return isNaN(n) ? 0 : n;
-}
-
-function updateWardDropdown() {
-  const lga = document.getElementById('filter-lga').value;
-  const wardSelect = document.getElementById('filter-ward');
-  const currentWard = wardSelect.value;
-  const wards = [...new Set(allRows
-    .filter(r => !lga || r.LGA.toLowerCase() === lga.toLowerCase())
-    .map(r => r.Ward)
-    .filter(Boolean)
-  )].sort();
-
-  wardSelect.innerHTML = '<option value="">All Wards (' + wards.length + ')</option>' +
-    wards.map(w => `<option value="${w}">${w}</option>`).join('');
-  if (wards.includes(currentWard)) wardSelect.value = currentWard;
-}
-
-function renderDashboard() {
-  const lga = document.getElementById('filter-lga').value.toLowerCase();
-  const ward = document.getElementById('filter-ward').value.toLowerCase();
-  const status = document.getElementById('filter-status').value.toLowerCase();
-  const query = document.getElementById('filter-search').value.toLowerCase().trim();
-
-  const filtered = allRows.filter(r => {
-    if (lga && r.LGA.toLowerCase() !== lga) return false;
-    if (ward && r.Ward.toLowerCase() !== ward) return false;
-    if (status && r.Status.toLowerCase() !== status) return false;
-    if (query && !(r.Polling_Unit.toLowerCase().includes(query) || r.PU_Code.toLowerCase().includes(query) || r.Ward.toLowerCase().includes(query))) return false;
-    return true;
-  });
-
-  const reportedCount = filtered.filter(r => r.Status.toLowerCase() === 'reported').length;
-  document.getElementById('pu-progress').textContent =
-    `Showing ${filtered.length} Polling Unit(s) · ${reportedCount} Reported`;
-
-  const totals = { ZLP: 0, APC: 0, PDP: 0, LP: 0, APGA: 0 };
-  filtered.forEach(r => {
-    totals.ZLP += num(r.ZLP);
-    totals.APC += num(r.APC);
-    totals.PDP += num(r.PDP);
-    totals.LP += num(r.LP);
-    totals.APGA += num(r.APGA);
-  });
-  const grandTotal = Object.values(totals).reduce((a, b) => a + b, 0);
-  document.getElementById('tally-grid').innerHTML = Object.entries(totals).map(([party, votes]) => {
-    const pct = grandTotal > 0 ? ((votes / grandTotal) * 100).toFixed(1) : '0.0';
-    return `<div class="tally-card ${party === 'ZLP' ? 'highlight' : ''}">
-      <div class="tally-party">${party}</div>
-      <div class="tally-votes">${votes.toLocaleString()}</div>
-      <div class="tally-pct">${pct}% of tallied votes</div>
-    </div>`;
-  }).join('');
-
-  const listEl = document.getElementById('pu-list');
-  if (!filtered.length) {
-    listEl.innerHTML = '<div class="pu-card">No polling units match your current filter.</div>';
-    return;
-  }
-
-  listEl.innerHTML = filtered.map(r => {
-    const isReported = r.Status.toLowerCase() === 'reported';
-    const ec8aHtml = r.EC8A_Link && r.EC8A_Link.startsWith('http')
-      ? `<a class="ec8a-btn" href="${r.EC8A_Link}" target="_blank" rel="noopener noreferrer">View Uploaded Form EC8A Sheet ↗</a>`
-      : '';
-    return `<div class="pu-card">
-      <div class="pu-top">
+  <header>
+    <div class="nav-wrap">
+      <a href="index.html" class="brand">
+        <img src="assets/zlp-logo.png" alt="ZLP Logo" onerror="this.style.display='none'" />
         <div>
-          <div class="pu-title">${r.Polling_Unit || 'Unnamed Polling Unit'}</div>
-          <div class="pu-meta">${r.LGA} · <strong>${r.Ward}</strong> · Code: ${r.PU_Code || 'N/A'}</div>
+          <div class="brand-title">Nnadozie Chikezie</div>
+          <div class="brand-sub">Owerri Federal Constituency · 2027</div>
         </div>
-        <span class="badge ${isReported ? 'badge-reported' : 'badge-pending'}">${r.Status || 'Pending'}</span>
-      </div>
-      <div class="pu-scores">
-        <div class="pu-score-item"><span>ZLP</span><strong>${num(r.ZLP)}</strong></div>
-        <div class="pu-score-item"><span>APC</span><strong>${num(r.APC)}</strong></div>
-        <div class="pu-score-item"><span>PDP</span><strong>${num(r.PDP)}</strong></div>
-        <div class="pu-score-item"><span>LP</span><strong>${num(r.LP)}</strong></div>
-        <div class="pu-score-item"><span>APGA</span><strong>${num(r.APGA)}</strong></div>
-      </div>
-      ${ec8aHtml}
-    </div>`;
-  }).join('');
-}
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="results.html" class="active">Situation Room</a>
+      </nav>
+    </div>
+  </header>
 
-async function loadSheetData() {
-  const btn = document.getElementById('refresh-btn');
-  btn.textContent = 'Refreshing...';
-  try {
-    const res = await fetch(SHEET_CSV_URL + '&t=' + Date.now());
-    const csvText = await res.text();
-    const matrix = parseCSV(csvText);
-    const headers = matrix[0] || [];
-    allRows = matrix.slice(1).map(cols => {
-      const obj = {};
-      headers.forEach((h, idx) => obj[h] = cols[idx] || '');
-      return obj;
-    }).filter(r => r.LGA || r.Polling_Unit);
+  <main class="container">
+    <div class="disclaimer">
+      <strong>Notice:</strong> Figures and Form EC8A sheets displayed here are real-time parallel collation entries from verified polling unit agents. Only the <strong>Independent National Electoral Commission (INEC)</strong> is legally empowered to announce and declare official election results.
+    </div>
 
-    updateWardDropdown();
-    renderDashboard();
-  } catch (e) {
-    document.getElementById('pu-progress').textContent = 'Unable to load sheet right now. Tap Refresh to try again.';
-  } finally {
-    btn.textContent = '↻ Refresh Live Figures';
-  }
-}
+    <div class="toolbar">
+      <div class="status-line" id="statusSummary">Loading polling units...</div>
+      <button class="btn-refresh" onclick="loadSheetData()">↻ Refresh Live Figures</button>
+    </div>
 
-document.getElementById('filter-lga').addEventListener('change', () => { updateWardDropdown(); renderDashboard(); });
-document.getElementById('filter-ward').addEventListener('change', renderDashboard);
-document.getElementById('filter-status').addEventListener('change', renderDashboard);
-document.getElementById('filter-search').addEventListener('input', renderDashboard);
-document.getElementById('refresh-btn').addEventListener('click', loadSheetData);
+    <section class="party-grid" id="partyCards"></section>
 
-loadSheetData();
-</script>
-<script src="script.js"></script>
-</body>
-</html>
-
+    <section class="filters">
+      <select id="filterLga" onchange="onLgaChange()">
+        <option value="">All 3 LGAs</option>
+        <option value="Owerri Municipal">Owerri Municipal</option>
+        <option value="Owerri North">Owerri North</option>
+        <option value="Owerri West">Owerri West</option>
+      </select>
+      <select id="filterWard" onchange="applyFilters()">
+        <option value="">All 33 Wards</option>
+      </select>

@@ -247,4 +247,33 @@
               <textarea id="q-message" name="message" rows="4" placeholder="Write your question here..." required></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Submit Question →</button>
-            
+                  <details id="complaints" class="qa-accordion">
+        <summary><span>2. Complaints &amp; Community Feedback</span><span>▾</span></summary>
+        <div class="qa-body">
+          <form class="ajax-campaign-form" action="https://formspree.io" method="POST">
+            <input type="hidden" name="submission_type" value="COMPLAINT / FEEDBACK">
+            <input type="text" name="_gotcha" style="display:none">
+            <div class="qa-grid">
+              <div class="qa-field"><label for="c-name">Full Name *</label><input id="c-name" type="text" name="name" placeholder="Enter your full name" required></div>
+              <div class="qa-field"><label for="c-contact">Email or Phone *</label><input id="c-contact" type="text" name="contact" placeholder="e.g. name@email.com or 080..." required></div>
+            </div>
+            <div class="qa-grid">
+              <div class="qa-field">
+                <label for="c-category">Topic / Category *</label>
+                <select id="c-category" name="category" required>
+                  <option value="Community Infrastructure / Roads">Community Infrastructure / Roads</option>
+                  <option value="Education & Youth Empowerment">Education &amp; Youth Empowerment</option>
+                  <option value="Healthcare & Welfare">Healthcare &amp; Welfare</option>
+                  <option value="Campaign Feedback / Suggestion">Campaign Feedback / Suggestion</option>
+                  <option value="Formal Complaint">Formal Complaint</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="qa-field"><label for="c-community">Ward / LGA *</label><input id="c-community" type="text" name="community" placeholder="e.g. Owerri Municipal, Owerri North, Owerri West" required></div>
+            </div>
+            <div class="qa-field"><label for="c-message">Details of Complaint or Feedback *</label><textarea id="c-message" name="message" rows="4" placeholder="Describe your complaint, concern, or feedback in detail..." required></textarea></div>
+            <button type="submit" class="btn btn-primary">Send Complaint / Feedback →</button>
+            <div class="qa-status" role="status">Thank you! Your complaint/feedback has been logged and sent directly to our team.</div>
+          </form>
+        </div>
+                  </details>

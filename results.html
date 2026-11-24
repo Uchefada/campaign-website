@@ -316,11 +316,11 @@ function renderDashboard() {
 
   listEl.innerHTML = filtered.map(r => {
     const isReported = r.Status.toLowerCase() === 'reported';
-            const rawSheet = (r.EC8A_Result_Sheets || r.EC8A_Link || '').trim();
+                    const rawSheet = (r.EC8A_Result_Sheets || r.EC8A_Link || '').trim();
         const driveId = rawSheet.indexOf('/d/') !== -1 ? rawSheet.split('/d/').pop().split('/').shift().split('?').shift() : (rawSheet.indexOf('id=') !== -1 ? rawSheet.split('id=').pop().split('&').shift() : '');
-        const imgThumb = driveId ? `https://google.com{driveId}&sz=w800` : rawSheet;
+        const imgThumb = driveId ? `https://googleusercontent.com{driveId}=w800` : rawSheet;
         const ec8aHtml = rawSheet
-          ? `<div style="margin-top:12px;"><a href="${rawSheet}" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;"><img src="${imgThumb}" alt="Form EC8A Sheet" style="width:160px;height:110px;object-fit:cover;border-radius:10px;border:1.5px solid #0b6e35;display:block;" /><span style="display:block;font-size:0.78rem;font-weight:700;color:#0b6e35;margin-top:4px;">🔍 Tap to View Full Form EC8A ↗</span></a></div>`
+          ? `<div style="margin-top:12px;display:flex;justify-content:flex-end;"><a href="${rawSheet}" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;text-align:center;"><img src="${imgThumb}" alt="Form EC8A Sheet" style="width:140px;height:105px;object-fit:cover;border-radius:10px;border:1.5px solid #0b6e35;display:block;" /><span style="display:block;font-size:0.74rem;font-weight:700;color:#0b6e35;margin-top:4px;">🔍 Tap to View Full EC8A ↗</span></a></div>`
           : '';
     
     return `<div class="pu-card">

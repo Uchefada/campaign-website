@@ -8,45 +8,51 @@
 <link rel="icon" href="assets/zlp-logo.jpg">
 <link rel="stylesheet" href="style.css">
 <style>
-  .engage-tabs {
+  .engage-stack {
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 720px;
   }
-  .engage-tab {
-    padding: 10px 18px;
-    border-radius: 999px;
-    border: 1px solid #cbd5e1;
-    background: #fff;
-    font: inherit;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .engage-tab.active {
-    background: #111827;
-    color: #fff;
-    border-color: #111827;
-  }
-  .qa-card {
+  details.qa-accordion {
     background: #fff;
     border-radius: 14px;
-    padding: 28px;
-    max-width: 720px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    overflow: hidden;
   }
-  .qa-panel {
+  details.qa-accordion summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 20px 24px;
+    font-weight: 700;
+    font-size: 1.12rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    user-select: none;
+    background: #fff;
+    transition: background 0.2s ease;
+  }
+  details.qa-accordion summary::-webkit-details-marker {
     display: none;
   }
-  .qa-panel.active {
-    display: block;
+  details.qa-accordion[open] summary {
+    background: #111827;
+    color: #fff;
   }
-  .qa-panel-title {
-    margin: 0 0 6px;
+  .qa-chevron {
     font-size: 1.25rem;
+    line-height: 1;
+    transition: transform 0.2s ease;
+  }
+  details.qa-accordion[open] .qa-chevron {
+    transform: rotate(180deg);
+  }
+  .qa-body {
+    padding: 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
   }
   .qa-panel-desc {
     margin: 0 0 20px;
@@ -60,6 +66,7 @@
   }
   @media (max-width: 640px) {
     .qa-grid { grid-template-columns: 1fr; gap: 0; }
+    .qa-body { padding: 20px; }
   }
   .qa-field {
     display: flex;
@@ -112,8 +119,8 @@
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="index.html#gallery">Gallery</a>
-      <a href="index.html#questions" data-open-tab="questions">Ask a Question</a>
-      <a href="index.html#complaints" data-open-tab="complaints">Complaints &amp; Feedback</a>
+      <a href="index.html#questions">Ask a Question</a>
+      <a href="index.html#complaints">Complaints &amp; Feedback</a>
       <a href="disclaimer.html">Disclaimer</a>
     </nav>
   </div>
@@ -201,45 +208,42 @@
   </div>
 </section>
 
-<section class="section alt" id="questions">
-  <span id="complaints" style="position:relative;top:-80px;"></span>
+<section class="section alt" id="engagement">
   <div class="container">
     <div class="section-head">
       <div class="eyebrow">Community engagement</div>
       <h2>Direct Voice from Owerri Federal Constituency</h2>
-      <p class="lead">Choose a section below to either ask Hon. Nnadozie Chikezie a question or submit a formal complaint and community feedback.</p>
+      <p class="lead">Tap either section below to open the form and send your question, complaint, or feedback directly to Hon. Nnadozie Chikezie's team.</p>
     </div>
 
-    <div class="engage-tabs" role="tablist">
-      <button type="button" class="engage-tab active" data-tab="questions" aria-selected="true">1. Ask a Question</button>
-      <button type="button" class="engage-tab" data-tab="complaints" aria-selected="false">2. Complaints &amp; Feedback</button>
-    </div>
+    <div class="engage-stack">
+      <details id="questions" class="qa-accordion" open>
+        <summary>
+          <span>1. Ask a Campaign or Policy Question</span>
+          <span class="qa-chevron" aria-hidden="true">▾</span>
+        </summary>
+        <div class="qa-body">
+          <p class="qa-panel-desc">Have a question about our 2027 agenda, manifesto, or upcoming constituency events? Send it directly to our team.</p>
 
-    <div class="qa-card">
-      <!-- PANEL 1: QUESTIONS -->
-      <div id="panel-questions" class="qa-panel active">
-        <h3 class="qa-panel-title">Ask a Campaign or Policy Question</h3>
-        <p class="qa-panel-desc">Have a question about our 2027 agenda, manifesto, or upcoming constituency events? Send it directly to our team.</p>
-
-        <form class="ajax-campaign-form" action="https://formspree.io" method="POST">
-          <input type="hidden" name="submission_type" value="QUESTION">
-          <input type="text" name="_gotcha" style="display:none">
-          <div class="qa-grid">
-            <div class="qa-field">
-              <label for="q-name">Full Name *</label>
-              <input id="q-name" type="text" name="name" placeholder="Enter your full name" required>
+          <form class="ajax-campaign-form" action="https://formspree.io" method="POST">
+            <input type="hidden" name="submission_type" value="QUESTION">
+            <input type="text" name="_gotcha" style="display:none">
+            <div class="qa-grid">
+              <div class="qa-field">
+                <label for="q-name">Full Name *</label>
+                <input id="q-name" type="text" name="name" placeholder="Enter your full name" required>
+              </div>
+              <div class="qa-field">
+                <label for="q-contact">Email Address or Phone Number *</label>
+                <input id="q-contact" type="text" name="contact" placeholder="e.g. name@email.com or 080..." required>
+              </div>
             </div>
             <div class="qa-field">
-              <label for="q-contact">Email Address or Phone Number *</label>
-              <input id="q-contact" type="text" name="contact" placeholder="e.g. name@email.com or 080..." required>
+              <label for="q-community">Ward / Community (Optional)</label>
+              <input id="q-community" type="text" name="community" placeholder="e.g. Naze, Owerri North, Owerri Municipal, Owerri West">
             </div>
-          </div>
-          <div class="qa-field">
-            <label for="q-community">Ward / Community (Optional)</label>
-            <input id="q-community" type="text" name="community" placeholder="e.g. Naze, Owerri North, Owerri Municipal, Owerri West">
-          </div>
-          <div class="qa-field">
-            <label for="q-message">Your Question *</label>
-            <textarea id="q-message" name="message" rows="4" placeholder="Write your question here..." required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Submit Question →</button>
+            <div class="qa-field">
+              <label for="q-message">Your Question *</label>
+              <textarea id="q-message" name="message" rows="4" placeholder="Write your question here..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Question →</button>

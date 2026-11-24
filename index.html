@@ -8,6 +8,28 @@
 <link rel="icon" href="assets/zlp-logo.jpg">
 <link rel="stylesheet" href="style.css">
 <style>
+  .engage-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .engage-tab {
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .engage-tab.active {
+    background: #111827;
+    color: #fff;
+    border-color: #111827;
+  }
   .qa-card {
     background: #fff;
     border-radius: 14px;
@@ -16,14 +38,28 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
     border: 1px solid rgba(0, 0, 0, 0.08);
   }
+  .qa-panel {
+    display: none;
+  }
+  .qa-panel.active {
+    display: block;
+  }
+  .qa-panel-title {
+    margin: 0 0 6px;
+    font-size: 1.25rem;
+  }
+  .qa-panel-desc {
+    margin: 0 0 20px;
+    opacity: 0.85;
+    font-size: 0.95rem;
+  }
   .qa-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    margin-bottom: 16px;
   }
   @media (max-width: 640px) {
-    .qa-grid { grid-template-columns: 1fr; }
+    .qa-grid { grid-template-columns: 1fr; gap: 0; }
   }
   .qa-field {
     display: flex;
@@ -36,6 +72,7 @@
     font-size: 0.95rem;
   }
   .qa-field input,
+  .qa-field select,
   .qa-field textarea {
     width: 100%;
     padding: 12px 14px;
@@ -43,9 +80,11 @@
     border-radius: 8px;
     font: inherit;
     font-size: 1rem;
+    background: #fff;
     box-sizing: border-box;
   }
   .qa-field input:focus,
+  .qa-field select:focus,
   .qa-field textarea:focus {
     outline: none;
     border-color: currentColor;
@@ -73,7 +112,8 @@
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="index.html#gallery">Gallery</a>
-      <a href="index.html#questions">Ask a Question</a>
+      <a href="index.html#questions" data-open-tab="questions">Ask a Question</a>
+      <a href="index.html#complaints" data-open-tab="complaints">Complaints &amp; Feedback</a>
       <a href="disclaimer.html">Disclaimer</a>
     </nav>
   </div>
@@ -162,76 +202,44 @@
 </section>
 
 <section class="section alt" id="questions">
+  <span id="complaints" style="position:relative;top:-80px;"></span>
   <div class="container">
     <div class="section-head">
       <div class="eyebrow">Community engagement</div>
-      <h2>Questions &amp; Comments</h2>
-      <p class="lead">Have a question, suggestion, or message for Hon. Nnadozie Chikezie and the campaign team? Send it directly below.</p>
+      <h2>Direct Voice from Owerri Federal Constituency</h2>
+      <p class="lead">Choose a section below to either ask Hon. Nnadozie Chikezie a question or submit a formal complaint and community feedback.</p>
     </div>
+
+    <div class="engage-tabs" role="tablist">
+      <button type="button" class="engage-tab active" data-tab="questions" aria-selected="true">1. Ask a Question</button>
+      <button type="button" class="engage-tab" data-tab="complaints" aria-selected="false">2. Complaints &amp; Feedback</button>
+    </div>
+
     <div class="qa-card">
-      <form id="campaign-qa-form" action="https://formspree.io/f/xdegyeye" method="POST">
-        <input type="text" name="_gotcha" style="display:none">
-        <div class="qa-grid">
-          <div class="qa-field">
-            <label for="qa-name">Full Name *</label>
-            <input id="qa-name" type="text" name="name" placeholder="Enter your full name" required>
+      <!-- PANEL 1: QUESTIONS -->
+      <div id="panel-questions" class="qa-panel active">
+        <h3 class="qa-panel-title">Ask a Campaign or Policy Question</h3>
+        <p class="qa-panel-desc">Have a question about our 2027 agenda, manifesto, or upcoming constituency events? Send it directly to our team.</p>
+
+        <form class="ajax-campaign-form" action="https://formspree.io" method="POST">
+          <input type="hidden" name="submission_type" value="QUESTION">
+          <input type="text" name="_gotcha" style="display:none">
+          <div class="qa-grid">
+            <div class="qa-field">
+              <label for="q-name">Full Name *</label>
+              <input id="q-name" type="text" name="name" placeholder="Enter your full name" required>
+            </div>
+            <div class="qa-field">
+              <label for="q-contact">Email Address or Phone Number *</label>
+              <input id="q-contact" type="text" name="contact" placeholder="e.g. name@email.com or 080..." required>
+            </div>
           </div>
           <div class="qa-field">
-            <label for="qa-contact">Email Address or Phone Number *</label>
-            <input id="qa-contact" type="text" name="contact" placeholder="e.g. name@email.com or 080..." required>
+            <label for="q-community">Ward / Community (Optional)</label>
+            <input id="q-community" type="text" name="community" placeholder="e.g. Naze, Owerri North, Owerri Municipal, Owerri West">
           </div>
-        </div>
-        <div class="qa-field">
-          <label for="qa-community">Ward / Community (Optional)</label>
-          <input id="qa-community" type="text" name="community" placeholder="e.g. Naze, Owerri North, Owerri Municipal, Owerri West">
-        </div>
-        <div class="qa-field">
-          <label for="qa-message">Your Question or Comment *</label>
-          <textarea id="qa-message" name="message" rows="4" placeholder="Write your question or comment here..." required></textarea>
-        </div>
-        <button type="submit" id="qa-submit" class="btn btn-primary">Send Question or Comment →</button>
-        <div id="qa-status" class="qa-status" role="status">Thank you! Your message has been sent directly to the campaign team.</div>
-      </form>
-    </div>
-  </div>
-</section>
-</main>
-<footer class="site-footer">
-  <div class="container footer-grid">
-    <div>
-      <h3>Nnadozie Chikezie</h3>
-      <p>Campaign website for Nnadozie Chikezie, candidate for the Federal House of Representatives, Owerri Federal Constituency, 2027.</p>
-    </div>
-    <div>
-      <h3>Explore</h3>
-      <p><a href="about.html">About the Candidate</a></p>
-      <p><a href="index.html#gallery">Campaign Gallery</a></p>
-      <p><a href="index.html#questions">Questions &amp; Comments</a></p>
-    </div>
-    <div>
-      <h3>Transparency</h3>
-      <p><a href="disclaimer.html">Advertising Disclaimer</a></p>
-    </div>
-  </div>
-  <div class="container copyright">© 2027 Nnadozie Chikezie Campaign Organization. All rights reserved.</div>
-</footer>
-<script src="script.js"></script>
-<script>
-  const qaForm = document.getElementById('campaign-qa-form');
-  const qaStatus = document.getElementById('qa-status');
-  const qaSubmit = document.getElementById('qa-submit');
-  if (qaForm) {
-    qaForm.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      qaSubmit.disabled = true;
-      qaSubmit.textContent = 'Sending...';
-      try {
-        const response = await fetch(qaForm.action, {
-          method: 'POST',
-          body: new FormData(qaForm),
-          headers: { 'Accept': 'application/json' }
-        });
-        if (response.ok) {
-          qaForm.reset();
-          qaStatus.style.display = 'block';
-        } else {
+          <div class="qa-field">
+            <label for="q-message">Your Question *</label>
+            <textarea id="q-message" name="message" rows="4" placeholder="Write your question here..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Question →</button>

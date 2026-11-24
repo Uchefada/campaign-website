@@ -1,1 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Situation Room &amp; Polling Unit Results | Nnadozie Chikezie 2027</title>
+<meta name="description" content="Unofficial campaign situation room collation and polling unit tracker for Owerri Federal Constituency 2027.">
+<link rel="icon" href="assets/zlp-logo.jpg">
+<link rel="stylesheet" href="style.css">
+<style>
+  .notice-banner {
+    background: #fefce8;
+    border: 1px solid #fde047;
+    color: #713f12;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 0.92rem;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  .tally-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .tally-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+  }
+  .tally-card.highlight {
+    border: 2px solid #15803d;
+    background: #f0fdf4;
+  }
+  .tally-party {
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0.8;
+  }
+  .tally-votes {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 4px 0;
+  }
+  .tally-pct {
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0.75;
+  }
+  .filter-bar {
+    background: #fff;
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid rgba(0,0,0,0.1);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .filter-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  .filter-group select,
+  .filter-group input {
+    padding: 11px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.98rem;
+    background: #fff;
+  }
+  .pu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .pu-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  }
+  .pu-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .pu-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin: 0 0 4px;
+  }
+  .pu-meta {
+    font-size: 0.88rem;
+    opacity: 0.78;
+  }
+  .badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  .badge-reported { background: #dcfce7; color: #166534; }
+  .badge-pending { background: #f1f5f9; color: #475569; }
+  .pu-scores {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    background: #f8fafc;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .pu-score-item span {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    opacity: 0.75;
+  }
+  .pu-score-item strong {
+    font-size: 1.05rem;
+  }
+  .ec8a-btn {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="index.html">
+      <img src="assets/zlp-logo.jpg" alt="ZLP logo" width="48" height="48">
+      <span>Nnadozie Chikezie<small>OWERRI FEDERAL CONSTITUENCY · 2027</small></span>
+    </a>
+    <button class="menu-btn" aria-label="Open navigation">☰</button>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="index.html#gallery">Gallery</a>
+      <a href="index.html#wards">INEC Wards</a>
+      <a href="results.html">Situation Room</a>
+      <a href="index.html#questions">Ask a Question</a>
+      <a href="disclaimer.html">Disclaimer</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="section alt">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Campaign Situation Room</div>
+      <h2>Polling Unit Results Tracker</h2>
+      <p class="lead">Follow polling-unit-by-polling-unit collation across Owerri Municipal, Owerri North, and Owerri West LGAs.</p>
+    </div>
+
+    <div class="notice-banner" role="note">
+      <strong>Official Compliance Notice:</strong> Figures displayed on this page represent unofficial campaign situation-room tallies compiled from agent Form EC8A reports. Only the <strong>Independent National Electoral Commission (INEC)</strong> is legally empowered to announce and declare official election results.
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+      <strong id="pu-progress">Loading situation room feed...</strong>
+      <button type="button" id="refresh-btn" class="btn btn-secondary" style="padding:8px 14px; font-size:0.9rem;">↻ Refresh Live Figures</button>
+    </div>
+
+    <div class="tally-grid" id="tally-grid"></div>
+
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label for="filter-lga">1. Filter by LGA</label>
+        <select id="filter-lga">
+          <option value="">All LGAs (33 Wards)</option>
+          <option value="Owerri Municipal">Owerri Municipal</option>
+          <option value="Owerri North">Owerri North</option>
+          <option value="Owerri West">Owerri West</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="filter-ward">2. Filter by INEC Ward</label>
+        <select id="filter-ward">
+          <option value="">All Wards</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="filter-status">3. Status</label>
+        <select id="filter-status">
+          <option value="">All Polling Units</option>
+          <option value="Reported">Reported Only</option>
+          <option value="Pending">Pending Only</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="filter-search">4. Search Polling Unit / Code</label>
+        <input id="filter-search" type="text" placeholder="e.g. Naze or 16-24-08...">
+      </div>
+    </div>
+
+    <div class="pu-list" id="pu-list"></div>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div><h3>Nnadozie Chikezie</h3><p>Campaign website for Nnadozie Chikezie, candidate for the Federal House of Representatives, Owerri Federal Constituency, 2027.</p></div>
+    <div><h3>Explore</h3><p><a href="index.html">Home</a></p><p><a href="about.html">About the Candidate</a></p><p><a href="results.html">Situation Room Tracker</a></p><p><a href="index.html#questions">Ask a Question</a></p></div>
+    <div><h3>Transparency</h3><p><a href="disclaimer.html">Advertising Disclaimer</a></p></div>
+  </div>
+  <div class="container copyright">© 2027 Nnadozie Chikezie Campaign Organization. All rights reserved.</div>
+</footer>
+
+<script>
+const SHEET_CSV_URL = 'https://google.com';
+let allRows = [];
+
+function parseCSV(text) {
+  const rows = [];
+  let row = [], cell = '', inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i], next = text[i + 1];
+    if (ch === '"' && inQuotes && next === '"') { cell += '"'; i++; }
+    else if (ch === '"') { inQuotes = !inQuotes; }
+    else if (ch === ',' && !inQuotes) { row.push(cell.trim()); cell = ''; }
+    else if ((ch === '\n' || (ch === '\r' && next === '\n')) && !inQuotes) {
+      if (ch === '\r') i++;
+      row.push(cell.trim());
+      if (row.some(c => c !== '')) rows.push(row);
+      row = []; cell = '';
+    } else { cell += ch; }
+  }
+  if (cell.length || row.length) { row.push(cell.trim()); rows.push(row); }
+  return rows;
+}
+
+function num(val) {
+  const n = parseInt((val || '0').replace(/[^0-9]/g, ''), 10);
+  return isNaN(n) ? 0 : n;
+}
+
+function updateWardDropdown() {
+  const lga = document.getElementById('filter-lga').value;
+  const wardSelect = document.getElementById('filter-ward');
+  const currentWard = wardSelect.value;
+  const wards = [...new Set(allRows
+    .filter(r => !lga || r.LGA.toLowerCase() === lga.toLowerCase())
+    .map(r => r.Ward)
+    .filter(Boolean)
+  )].sort();
+
+  wardSelect.innerHTML = '<option value="">All Wards (' + wards.length + ')</option>' +
+    wards.map(w => `<option value="${w}">${w}</option>`).join('');
+  if (wards.includes(currentWard)) wardSelect.value = currentWard;
+}
+
+function renderDashboard() {
+  const lga = document.getElementById('filter-lga').value.toLowerCase();
+  const ward = document.getElementById('filter-ward').value.toLowerCase();
+  const status = document.getElementById('filter-status').value.toLowerCase();
+  const query = document.getElementById('filter-search').value.toLowerCase().trim();
+
+  const filtered = allRows.filter(r => {
+    if (lga && r.LGA.toLowerCase() !== lga) return false;
+    if (ward && r.Ward.toLowerCase() !== ward) return false;
+    if (status && r.Status.toLowerCase() !== status) return false;
+    if (query && !(r.Polling_Unit.toLowerCase().includes(query) || r.PU_Code.toLowerCase().includes(query) || r.Ward.toLowerCase().includes(query))) return false;
+    return true;
+  });
+
+  const reportedCount = filtered.filter(r => r.Status.toLowerCase() === 'reported').length;
+  document.getElementById('pu-progress').textContent =
+    `Showing ${filtered.length} Polling Unit(s) · ${reportedCount} Reported`;
+
+  const totals = { ZLP: 0, APC: 0, PDP: 0, LP: 0, APGA: 0 };
+  filtered.forEach(r => {
+    totals.ZLP += num(r.ZLP);
+    totals.APC += num(r.APC);
+    totals.PDP += num(r.PDP);
+    totals.LP += num(r.LP);
+    totals.APGA += num(r.APGA);
+  });
+  const grandTotal = Object.values(totals).reduce((a, b) => a + b, 0);
+
 

@@ -267,23 +267,26 @@
     let allRows = [];
     let filteredRows = [];
     let currentPage = 1;
-
-    function parseDriveImage(rawUrl) {
-      if (!rawUrl) return null;
-      const clean = String(rawUrl).trim();
-      if (!clean) return null;
-      let fileId = "";
-      if (clean.indexOf("/d/") !== -1) {
-        fileId = clean.split("/d/")[1].split("/")[0].split("?")[0];
-      } else if (clean.indexOf("id=") !== -1) {
-        fileId = clean.split("id=")[1].split("&")[0];
-      }
-      if (fileId) {
-        return {
-          thumb: `https://google.com{fileId}&sz=w800`,
-          full: `https://google.com{fileId}&sz=w1600`,
-          original: clean
-        };
+ function parseDriveImage(rawUrl) {
+   if (!rawUrl) return null;
+   const clean = String(rawUrl).trim();
+   if (!clean) return null;
+   let fileId = "";
+   if (clean.indexOf("/d/") !== -1) {
+     fileId = clean.split("/d/").pop().split("/").shift().split("?").shift();
+   } else if (clean.indexOf("id=") !== -1) {
+     fileId = clean.split("id=").pop().split("&").shift();
+   }
+   if (fileId) {
+     return {
+       thumb: `https://google.com{fileId}&sz=w800`,
+       full: `https://google.com{fileId}&sz=w1600`,
+       original: clean
+     };
+   }
+   return { thumb: clean, full: clean, original: clean };
+ }
+    
       }
       return { thumb: clean, full: clean, original: clean };
     }

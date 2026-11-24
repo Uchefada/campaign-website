@@ -298,5 +298,78 @@ function renderDashboard() {
     totals.APGA += num(r.APGA);
   });
   const grandTotal = Object.values(totals).reduce((a, b) => a + b, 0);
+  document.getElementById('tally-grid').innerHTML = Object.entries(totals).map(([party, votes]) => {
+    const pct = grandTotal > 0 ? ((votes / grandTotal) * 100).toFixed(1) : '0.0';
+    return `<div class="tally-card ${party === 'ZLP' ? 'highlight' : ''}">
+      <div class="tally-party">${party}</div>
+      <div class="tally-votes">${votes.toLocaleString()}</div>
+      <div class="tally-pct">${pct}% of tallied votes</div>
+    </div>`;
+  }).join('');
 
+  const listEl = document.getElementById('pu-list');
+  if (!filtered.length) {
+    listEl.innerHTML = '<div class="pu-card">No polling units match your current filter.</div>';
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(r => {
+    const isReported = r.Status.toLowerCase() === 'reported';
+    const ec8aHtml = r.EC8A_Link && r.EC8A_Link.startsWith('http')
+      ? `<a class="ec8a-btn" href="${r.EC8A_Link}" target="_blank" rel="noopener noreferrer">View Uploaded Form EC8A Sheet ↗</a>`
+      : '';
+    return `<div class="pu-card">
+      <div class="pu-top">
+        <div>
+          <div class="pu-title">${r.Polling_Unit || 'Unnamed Polling Unit'}</div>
+          <div class="pu-meta">${r.LGA} · <strong>${r.Ward}</strong> · Code: ${r.PU_Code || 'N/A'}</div>
+        </div>
+        <span class="badge ${isReported ? 'badge-reported' : 'badge-pending'}">${r.Status || 'Pending'}</span>
+      </div>
+      <div class="pu-scores">
+        <div class="pu-score-item"><span>ZLP</span><strong>${num(r.ZLP)}</strong></div>
+        <div class="pu-score-item"><span>APC</span><strong>${num(r.APC)}</strong></div>
+        <div class="pu-score-item"><span>PDP</span><strong>${num(r.PDP)}</strong></div>
+        <div class="pu-score-item"><span>LP</span><strong>${num(r.LP)}</strong></div>
+        <div class="pu-score-item"><span>APGA</span><strong>${num(r.APGA)}</strong></div>
+      </div>
+      ${ec8aHtml}
+    </div>`;
+  }).join('');
+}
+
+async function loadSheetData() {
+  const btn = document.getElementById('refresh-btn');
+  btn.textContent = 'Refreshing...';
+  try {
+    const res = await fetch(SHEET_CSV_URL + '&t=' + Date.now());
+    const csvText = await res.text();
+    const matrix = parseCSV(csvText);
+    const headers = matrix[0] || [];
+    allRows = matrix.slice(1).map(cols => {
+      const obj = {};
+      headers.forEach((h, idx) => obj[h] = cols[idx] || '');
+      return obj;
+    }).filter(r => r.LGA || r.Polling_Unit);
+
+    updateWardDropdown();
+    renderDashboard();
+  } catch (e) {
+    document.getElementById('pu-progress').textContent = 'Unable to load sheet right now. Tap Refresh to try again.';
+  } finally {
+    btn.textContent = '↻ Refresh Live Figures';
+  }
+}
+
+document.getElementById('filter-lga').addEventListener('change', () => { updateWardDropdown(); renderDashboard(); });
+document.getElementById('filter-ward').addEventListener('change', renderDashboard);
+document.getElementById('filter-status').addEventListener('change', renderDashboard);
+document.getElementById('filter-search').addEventListener('input', renderDashboard);
+document.getElementById('refresh-btn').addEventListener('click', loadSheetData);
+
+loadSheetData();
+</script>
+<script src="script.js"></script>
+</body>
+</html>
 

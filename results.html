@@ -260,4 +260,221 @@
 
   <script>
     const SHEET_ID = "1En7vVTjjZXweO59hLAkGLRitzKY8wc7sxWOO_oDlia4";
-  
+      const SHEET_URL = `https://google.com{SHEET_ID}/gviz/tq?tqx=out:json&headers=1`;
+    const PARTIES = ["ZLP", "APC", "PDP", "LP", "APGA"];
+    const PAGE_SIZE = 25;
+
+    let allRows = [];
+    let filteredRows = [];
+    let currentPage = 1;
+
+    function parseDriveImage(rawUrl) {
+      if (!rawUrl) return null;
+      const clean = String(rawUrl).trim();
+      if (!clean) return null;
+      let fileId = "";
+      if (clean.indexOf("/d/") !== -1) {
+        fileId = clean.split("/d/")[1].split("/")[0].split("?")[0];
+      } else if (clean.indexOf("id=") !== -1) {
+        fileId = clean.split("id=")[1].split("&")[0];
+      }
+      if (fileId) {
+        return {
+          thumb: `https://google.com{fileId}&sz=w800`,
+          full: `https://google.com{fileId}&sz=w1600`,
+          original: clean
+        };
+      }
+      return { thumb: clean, full: clean, original: clean };
+    }
+
+    async function loadSheetData() {
+      document.getElementById("statusSummary").textContent = "Refreshing live figures...";
+      try {
+        const res = await fetch(`${SHEET_URL}&_=${Date.now()}`);
+        const text = await res.text();
+        const jsonStr = text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1);
+        const data = JSON.parse(jsonStr);
+
+        let rawRows = data.table.rows || [];
+        let headers = (data.table.cols || []).map(c => (c.label || "").trim());
+
+        if (headers.every(h => !h) && rawRows.length > 0 && rawRows[0].c) {
+          headers = rawRows[0].c.map(cell => (cell && cell.v !== null ? String(cell.v).trim() : ""));
+          rawRows = rawRows.slice(1);
+        }
+
+        const idx = {};
+        headers.forEach((name, i) => {
+          if (name) idx[name.toLowerCase()] = i;
+        });
+
+        allRows = rawRows.map(r => {
+          const getVal = (key) => {
+            const i = idx[key.toLowerCase()];
+            if (i === undefined || !r.c || !r.c[i]) return "";
+            return r.c[i].v !== null && r.c[i].v !== undefined ? r.c[i].v : "";
+          };
+          const scores = {};
+          PARTIES.forEach(p => {
+            scores[p] = Number(getVal(p)) || 0;
+          });
+          const sheetUrl = getVal("EC8A_Result_Sheets") || getVal("Result_Sheet_URL") || "";
+          return {
+            lga: String(getVal("LGA") || "").trim(),
+            ward: String(getVal("Ward") || "").trim(),
+            code: String(getVal("PU_Code") || "").trim(),
+            unit: String(getVal("Polling_Unit") || "").trim(),
+            status: String(getVal("Status") || "pending").trim().toLowerCase(),
+            scores,
+            photo: parseDriveImage(sheetUrl)
+          };
+        }).filter(row => row.lga && row.lga.toLowerCase() !== "lga");
+
+        populateWards();
+        renderTotals();
+        applyFilters();
+      } catch (err) {
+        document.getElementById("statusSummary").textContent = "Error loading sheet: " + err.message;
+      }
+    }
+
+    function renderTotals() {
+      const totals = {};
+      PARTIES.forEach(p => totals[p] = 0);
+      let grandTotal = 0;
+
+      allRows.forEach(row => {
+        PARTIES.forEach(p => {
+          totals[p] += row.scores[p];
+          grandTotal += row.scores[p];
+        });
+      });
+
+      document.getElementById("partyCards").innerHTML = PARTIES.map(p => {
+        const pct = grandTotal > 0 ? ((totals[p] / grandTotal) * 100).toFixed(1) : "0.0";
+        return `
+          <div class="party-card ${p === 'ZLP' ? 'zlp' : ''}">
+            <div class="party-name">${p}</div>
+            <div class="party-votes">${totals[p].toLocaleString()}</div>
+            <div class="party-pct">${pct}% of tallied votes</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function onLgaChange() {
+      populateWards();
+      applyFilters();
+    }
+
+    function populateWards() {
+      const selectedLga = document.getElementById("filterLga").value;
+      const wardSelect = document.getElementById("filterWard");
+      const currentWard = wardSelect.value;
+      const wards = [...new Set(
+        allRows
+          .filter(r => !selectedLga || r.lga.toLowerCase() === selectedLga.toLowerCase())
+          .map(r => r.ward)
+          .filter(Boolean)
+      )];
+
+      wardSelect.innerHTML = `<option value="">All Wards (${wards.length})</option>` +
+        wards.map(w => `<option value="${w}">${w}</option>`).join("");
+      if (wards.includes(currentWard)) wardSelect.value = currentWard;
+    }
+
+    function applyFilters() {
+      const lga = document.getElementById("filterLga").value.toLowerCase();
+      const ward = document.getElementById("filterWard").value.toLowerCase();
+      const photoFilter = document.getElementById("filterPhoto").value;
+      const query = document.getElementById("filterSearch").value.trim().toLowerCase();
+
+      filteredRows = allRows.filter(r => {
+        if (lga && r.lga.toLowerCase() !== lga) return false;
+        if (ward && r.ward.toLowerCase() !== ward) return false;
+        if (photoFilter === "with_photo" && !r.photo) return false;
+        if (photoFilter === "verified" && r.status !== "verified") return false;
+        if (query && !(`${r.unit} ${r.code} ${r.ward}`.toLowerCase().includes(query))) return false;
+        return true;
+      });
+
+      filteredRows.sort((a, b) => {
+        const aScore = (a.photo ? 2 : 0) + (a.status === "verified" ? 1 : 0);
+        const bScore = (b.photo ? 2 : 0) + (b.status === "verified" ? 1 : 0);
+        return bScore - aScore;
+      });
+
+      const reportedCount = allRows.filter(r => r.status === "verified").length;
+      const photoCount = allRows.filter(r => r.photo).length;
+      document.getElementById("statusSummary").textContent =
+        `Showing ${filteredRows.length} of ${allRows.length} Polling Unit(s) · ${reportedCount} Reported · ${photoCount} EC8A Photo(s)`;
+
+      currentPage = 1;
+      renderList();
+    }
+
+    function renderList() {
+      const list = document.getElementById("puList");
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const pageRows = filteredRows.slice(start, start + PAGE_SIZE);
+
+      list.innerHTML = pageRows.map(r => {
+        const scoresHtml = PARTIES.map(p =>
+          `<span class="score-pill ${p === 'ZLP' ? 'zlp' : ''}">${p}: ${r.scores[p]}</span>`
+        ).join("");
+
+        const sideHtml = r.photo
+          ? `<button class="ec8a-thumb-btn" onclick="openModal('${encodeURIComponent(r.photo.full)}', '${encodeURIComponent(r.photo.original)}', '${encodeURIComponent(r.code + ' — ' + r.unit)}')">
+               <img src="${r.photo.thumb}" alt="EC8A Sheet for ${r.code}" loading="lazy" />
+               <div class="ec8a-caption">🔍 View EC8A Sheet</div>
+             </button>`
+          : `<div class="ec8a-empty">📄<br/>No EC8A Sheet<br/>Uploaded Yet</div>`;
+
+        return `
+          <article class="pu-card">
+            <div>
+              <div class="pu-meta">
+                <span class="badge badge-lga">${r.lga}</span>
+                <span class="badge ${r.status === 'verified' ? 'badge-verified' : 'badge-pending'}">${r.status}</span>
+              </div>
+              <div class="pu-title">${r.unit || r.code}</div>
+              <div class="pu-code">${r.ward} · Code: ${r.code}</div>
+              <div class="pu-scores">${scoresHtml}</div>
+            </div>
+            <div>${sideHtml}</div>
+          </article>
+        `;
+      }).join("");
+
+      const totalPages = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
+      document.getElementById("pagination").innerHTML = `
+        <button class="page-btn" ${currentPage <= 1 ? "disabled" : ""} onclick="changePage(-1)">← Prev</button>
+        <span>Page ${currentPage} of ${totalPages}</span>
+        <button class="page-btn" ${currentPage >= totalPages ? "disabled" : ""} onclick="changePage(1)">Next →</button>
+      `;
+    }
+
+    function changePage(delta) {
+      currentPage += delta;
+      renderList();
+      window.scrollTo({ top: 260, behavior: "smooth" });
+    }
+
+    function openModal(fullEnc, origEnc, titleEnc) {
+      document.getElementById("modalImg").src = decodeURIComponent(fullEnc);
+      document.getElementById("modalRawLink").href = decodeURIComponent(origEnc);
+      document.getElementById("modalTitle").textContent = decodeURIComponent(titleEnc);
+      document.getElementById("ec8aModal").classList.add("open");
+    }
+
+    function closeModal() {
+      document.getElementById("ec8aModal").classList.remove("open");
+      document.getElementById("modalImg").src = "";
+    }
+
+    loadSheetData();
+  </script>
+</body>
+</html>
+

@@ -208,47 +208,45 @@
   </div>
 </section>
 
-<section class="section alt" id="engagement">
+<section class="section alt" id="questions-section">
   <div class="container">
     <div class="section-head">
-      <div class="eyebrow">Community engagement</div>
-      <h2>Direct Voice from Owerri Federal Constituency</h2>
-      <p class="lead">Tap either section below to open the form and send your question, complaint, or feedback directly to Hon. Nnadozie Chikezie's team.</p>
+      <div class="eyebrow">Ask the candidate</div>
+      <h2>Campaign &amp; Policy Questions</h2>
+      <p class="lead">Have a question about our 2027 agenda, manifesto, or upcoming constituency events? Tap below to send it directly to our team.</p>
     </div>
-
     <div class="engage-stack">
       <details id="questions" class="qa-accordion">
-        <summary>
-          <span>1. Ask a Campaign or Policy Question</span>
-          <span class="qa-chevron" aria-hidden="true">▾</span>
-        </summary>
+        <summary><span>Ask a Campaign or Policy Question</span><span>▾</span></summary>
         <div class="qa-body">
-          <p class="qa-panel-desc">Have a question about our 2027 agenda, manifesto, or upcoming constituency events? Send it directly to our team.</p>
-
           <form class="ajax-campaign-form" action="https://formspree.io" method="POST">
             <input type="hidden" name="submission_type" value="QUESTION">
             <input type="text" name="_gotcha" style="display:none">
             <div class="qa-grid">
-              <div class="qa-field">
-                <label for="q-name">Full Name *</label>
-                <input id="q-name" type="text" name="name" placeholder="Enter your full name" required>
-              </div>
-              <div class="qa-field">
-                <label for="q-contact">Email Address or Phone Number *</label>
-                <input id="q-contact" type="text" name="contact" placeholder="e.g. name@email.com or 080..." required>
-              </div>
+              <div class="qa-field"><label for="q-name">Full Name *</label><input id="q-name" type="text" name="name" placeholder="Enter your full name" required></div>
+              <div class="qa-field"><label for="q-contact">Email or Phone *</label><input id="q-contact" type="text" name="contact" placeholder="e.g. name@email.com or 080..." required></div>
             </div>
-            <div class="qa-field">
-              <label for="q-community">Ward / Community (Optional)</label>
-              <input id="q-community" type="text" name="community" placeholder="e.g. Naze, Owerri North, Owerri Municipal, Owerri West">
-            </div>
-            <div class="qa-field">
-              <label for="q-message">Your Question *</label>
-              <textarea id="q-message" name="message" rows="4" placeholder="Write your question here..." required></textarea>
-            </div>
+            <div class="qa-field"><label for="q-community">Ward / Community (Optional)</label><input id="q-community" type="text" name="community" placeholder="e.g. Naze, Owerri North, Owerri Municipal, Owerri West"></div>
+            <div class="qa-field"><label for="q-message">Your Question *</label><textarea id="q-message" name="message" rows="4" placeholder="Write your question here..." required></textarea></div>
             <button type="submit" class="btn btn-primary">Submit Question →</button>
-                  <details id="complaints" class="qa-accordion">
-        <summary><span>2. Complaints &amp; Community Feedback</span><span>▾</span></summary>
+            <div class="qa-status" role="status">Thank you! Your question has been sent directly to the campaign team.</div>
+          </form>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="complaints-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Constituency desk</div>
+      <h2>Complaints &amp; Community Feedback</h2>
+      <p class="lead">Report a pressing community issue, share constructive feedback, or raise a concern regarding your ward or the campaign.</p>
+    </div>
+    <div class="engage-stack">
+      <details id="complaints" class="qa-accordion">
+        <summary><span>Submit a Complaint or Feedback</span><span>▾</span></summary>
         <div class="qa-body">
           <form class="ajax-campaign-form" action="https://formspree.io" method="POST">
             <input type="hidden" name="submission_type" value="COMPLAINT / FEEDBACK">
@@ -276,4 +274,49 @@
             <div class="qa-status" role="status">Thank you! Your complaint/feedback has been logged and sent directly to our team.</div>
           </form>
         </div>
-                  </details>
+      </details>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div><h3>Nnadozie Chikezie</h3><p>Campaign website for Nnadozie Chikezie, candidate for the Federal House of Representatives, Owerri Federal Constituency, 2027.</p></div>
+    <div><h3>Explore</h3><p><a href="about.html">About the Candidate</a></p><p><a href="index.html#gallery">Campaign Gallery</a></p><p><a href="index.html#questions">Ask a Question</a></p><p><a href="index.html#complaints">Complaints &amp; Feedback</a></p></div>
+    <div><h3>Transparency</h3><p><a href="disclaimer.html">Advertising Disclaimer</a></p></div>
+  </div>
+  <div class="container copyright">© 2027 Nnadozie Chikezie Campaign Organization. All rights reserved.</div>
+</footer>
+<script>
+  document.querySelectorAll('.ajax-campaign-form').forEach(form => {
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const statusBox = form.querySelector('.qa-status');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (response.ok) {
+          form.reset();
+          statusBox.style.display = 'block';
+        } else {
+          alert('There was an issue sending your message. Please try again.');
+        }
+      } catch (err) {
+        alert('Network error. Please check your connection and try again.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+  });
+</script>
+<script src="script.js"></script>
+</body>
+</html>

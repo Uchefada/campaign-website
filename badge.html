@@ -441,7 +441,7 @@
         document.body.appendChild(tempForm);
         tempForm.submit();
         setTimeout(() => tempForm.remove(), 1500);
-        statusEl.textContent = `✓ Pass ${passId} saved to Google Sheet & downloaded!`;
+        statusEl.textContent = `✓ Pass ${passId} registered in Official Supporter Database & downloaded!`;
           }
     }
 
@@ -499,7 +499,7 @@
             s.src = ["https:/", "docs.google.com", "spreadsheets", "d", SUPPORTERS_SHEET_ID, "gviz", "tq?tqx=out:json&t=" + Date.now()].join("/");
       s.onerror = function() {
         box.className = "verify-result verify-err";
-        box.textContent = "Could not reach Google Sheets. Check internet connection.";
+        box.textContent = "Could not connect to the verification server. Please check your internet connection.";
       };
       document.body.appendChild(s);
     }

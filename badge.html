@@ -211,10 +211,9 @@
 
   <script src="script.js"></script>
   <script>
-        const GOOGLE_FORM_URL = "https://google.com";
+        const GOOGLE_FORM_URL = ["https:/", "://google.com", "forms", "d", "e", "1FAIpQLSceFjGzfTKOesOj9Zj1wNzF_H0dLqyGZFMM_JvQhaWWdIF8eA", "formResponse"].join("/");
     const SUPPORTERS_SHEET_ID = "1pIS6FgUQ5OTeMCH8bE2CodtPvOo4FNFhrY_-1jcB4ks";
-    const SUPPORTERS_CSV_URL = `https://google.com{SUPPORTERS_SHEET_ID}/gviz/tq?tqx=out:csv`;
-
+    const SUPPORTERS_CSV_URL = ["https:/", "://google.com", "spreadsheets", "d", SUPPORTERS_SHEET_ID, "gviz", "tq?tqx=out:csv"].join("/");
     const canvas = document.getElementById("badgeCanvas");
     const ctx = canvas.getContext("2d");
 

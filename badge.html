@@ -211,7 +211,7 @@
 
   <script src="script.js"></script>
   <script>
-    const FORMSPREE_URL = "https://formspree.io";
+        const GOOGLE_FORM_URL = "https://google.com";
     const SUPPORTERS_SHEET_ID = "1pIS6FgUQ5OTeMCH8bE2CodtPvOo4FNFhrY_-1jcB4ks";
     const SUPPORTERS_CSV_URL = `https://google.com{SUPPORTERS_SHEET_ID}/gviz/tq?tqx=out:csv`;
 
@@ -247,7 +247,7 @@
     loadAsset("assets/hero.jpg", (img) => { candidateImg = img; drawBadge(); });
     loadAsset("assets/zlp-logo.jpg", (img) => { logoImg = img; drawBadge(); });
 
-        function handlePhotoUpload(e) {
+    function handlePhotoUpload(e) {
       const file = e.target.files ? e.target.files.item(0) : null;
       if (!file) return;
       const reader = new FileReader();
@@ -414,20 +414,20 @@
         statusEl.style.color = "#0b6e35";
         statusEl.textContent = `Pass ${passId} downloaded! Saving to Supporter Database...`;
         try {
-          await fetch(FORMSPREE_URL, {
+          const formData = new URLSearchParams();
+          formData.append("entry.1203131147", passId);
+          formData.append("entry.1913888307", fullName);
+          formData.append("entry.270821178", phone);
+          formData.append("entry.639121192", lga);
+          formData.append("entry.1361106083", ward || "Not specified");
+
+          await fetch(GOOGLE_FORM_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json", "Accept": "application/json" },
-            body: JSON.stringify({
-              _subject: `New 2027 Supporter Pass: ${passId} — ${fullName}`,
-              Pass_ID: passId,
-              Full_Name: fullName,
-              WhatsApp_Phone: phone,
-              LGA: lga,
-              Ward: ward || "Not specified",
-              Timestamp: new Date().toISOString()
-            })
+            mode: "no-cors",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString()
           });
-          statusEl.textContent = `✓ Pass ${passId} registered & downloaded!`;
+          statusEl.textContent = `✓ Pass ${passId} saved to Google Sheet & downloaded!`;
         } catch (err) {
           statusEl.textContent = `Pass ${passId} downloaded!`;
         }
@@ -455,7 +455,7 @@
       const box = document.getElementById("verifyResult");
       if (!query) {
         box.className = "verify-result verify-err";
-        box.textContent = "Please enter a Pass ID (for example: OWR-2027-6294).";
+        box.textContent = "Please enter a Pass ID (for example: OWR-2027-6924).";
         return;
       }
       box.className = "verify-result verify-ok";
@@ -465,23 +465,5 @@
         const res = await fetch(`${SUPPORTERS_CSV_URL}&_=${Date.now()}`);
         const csv = await res.text();
         const rows = parseSimpleCsv(csv);
-        const match = rows.slice(1).find(cols => cols.some(c => c.toUpperCase() === query));
-        if (match) {
-          const cleanCols = match.filter(c => c && c.toUpperCase() !== query);
-          box.className = "verify-result verify-ok";
-          box.textContent = `✓ VERIFIED 2027 SUPPORTER PASS (${query}): ${cleanCols.join(" · ")}`;
-        } else {
-          box.className = "verify-result verify-err";
-          box.textContent = `✕ Pass ID "${query}" was not found in the verified database yet.`;
-        }
-      } catch (err) {
-        box.className = "verify-result verify-err";
-        box.textContent = "Could not connect to the verification database. Please try again.";
-      }
-    }
-
-    drawBadge();
-  </script>
-</body>
-</html>
+          
 

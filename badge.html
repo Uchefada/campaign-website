@@ -268,3 +268,84 @@
       // Candidate & Supporter portrait circles
       if (userImg) {
         if (candidateImg) drawCircularImage(candidateImg, 360, 395, 145, "#eab308", 8);
+                drawCircularImage(userImg, 720, 395, 145, "#ffffff", 8);
+        ctx.fillStyle = "#fde047";
+        ctx.font = "bold 22px Inter, Arial, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("HON. NNADOZIE CHIKEZIE", 360, 578);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText("VERIFIED SUPPORTER", 720, 578);
+      } else {
+        if (candidateImg) {
+          drawCircularImage(candidateImg, 540, 395, 155, "#eab308", 8);
+        }
+        ctx.fillStyle = "#fde047";
+        ctx.font = "bold 24px Inter, Arial, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("HON. NNADOZIE CHIKEZIE · FOR HOUSE OF REPS", 540, 588);
+      }
+
+      // White supporter credential card
+      roundRect(70, 625, 940, 430, 28, "#ffffff", null);
+
+      ctx.fillStyle = "#0b6e35";
+      ctx.font = "bold 24px Inter, Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("ISSUED TO CONSTITUENCY SUPPORTER", 540, 682);
+
+      // Supporter Name (auto-scales if long)
+      ctx.fillStyle = "#0f172a";
+      let fontSize = 54;
+      ctx.font = `800 ${fontSize}px Inter, Arial, sans-serif`;
+      while (ctx.measureText(displayName).width > 860 && fontSize > 30) {
+        fontSize -= 2;
+        ctx.font = `800 ${fontSize}px Inter, Arial, sans-serif`;
+      }
+      ctx.fillText(displayName, 540, 755);
+
+      // LGA & Ward line
+      ctx.fillStyle = "#334155";
+      ctx.font = "700 30px Inter, Arial, sans-serif";
+      const locationText = wardRaw ? `${lga.toUpperCase()} · ${wardRaw.toUpperCase()} WARD` : lga.toUpperCase();
+      ctx.fillText(locationText, 540, 815);
+
+      // Serial Pass ID Pill
+      roundRect(270, 850, 540, 66, 33, "#eef8f1", "#0b6e35");
+      ctx.fillStyle = "#074f26";
+      ctx.font = "800 30px Inter, Arial, sans-serif";
+      ctx.fillText(`PASS ID: ${passId}`, 540, 894);
+
+      // Privileges description
+      ctx.fillStyle = "#475569";
+      ctx.font = "600 22px Inter, Arial, sans-serif";
+      ctx.fillText("Priority Invitation: Constituency Town Halls, Youth & Community Briefings", 540, 968);
+      ctx.fillText("Owerri Municipal · Owerri North · Owerri West Federal Constituency", 540, 1004);
+
+      // Bottom campaign pledge & website
+      ctx.fillStyle = "#fde047";
+      ctx.font = "800 34px Inter, Arial, sans-serif";
+      ctx.fillText("I STAND WITH HON. NNADOZIE CHIKEZIE", 540, 1135);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "600 26px Inter, Arial, sans-serif";
+      ctx.fillText("Federal House of Representatives · Owerri Federal Constituency 2027", 540, 1185);
+
+      roundRect(290, 1215, 500, 54, 27, "rgba(0,0,0,0.3)", null);
+      ctx.fillStyle = "#fde047";
+      ctx.font = "bold 24px Inter, Arial, sans-serif";
+      ctx.fillText("honnnadoziechikezie.org/badge.html", 540, 1250);
+    }
+
+    function downloadBadge() {
+      drawBadge();
+      const nameRaw = (document.getElementById("supporterName").value || "supporter").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      const link = document.createElement("a");
+      link.download = `nnadozie-chikezie-2027-pass-${nameRaw || "owerri"}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+
+    drawBadge();
+  </script>
+</body>
+</html>

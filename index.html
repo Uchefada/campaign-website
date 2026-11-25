@@ -327,5 +327,55 @@
   });
 </script>
 <script src="script.js"></script>
+    <style>
+    .mobile-quick-bar {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      body {
+        padding-bottom: 74px;
+      }
+      .mobile-quick-bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 999;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(8px);
+        border-top: 1px solid #cbd5e1;
+        box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.08);
+      }
+      .mobile-quick-bar a {
+        text-align: center;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.88rem;
+        padding: 11px 10px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .mqb-pass {
+        background: #fef08a;
+        color: #064e24;
+        border: 1.5px solid #eab308;
+      }
+      .mqb-room {
+        background: #0b6e35;
+        color: #ffffff;
+      }
+    }
+  </style>
+  <div class="mobile-quick-bar" aria-label="Quick Campaign Actions">
+    <a href="badge.html" class="mqb-pass">🪪 Supporter Pass</a>
+    <a href="results.html" class="mqb-room">📊 Situation Room</a>
+  </div>
 </body>
 </html>

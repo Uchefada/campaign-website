@@ -297,7 +297,7 @@
       if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 3; ctx.stroke(); }
     }
 
-    function drawBadge() {
+      function drawBadge() {
       const nameRaw = (document.getElementById("supporterName").value || "").trim();
       const displayName = nameRaw ? nameRaw.toUpperCase() : "PROUD HON. NNADOZIE SUPPORTER";
       const lga = document.getElementById("supporterLga").value;
@@ -356,13 +356,15 @@
 
       ctx.fillStyle = "#334155";
       ctx.font = "700 30px Inter, Arial, sans-serif";
-      const locationText = wardRaw ? `${lga.toUpperCase()} · ${wardRaw.toUpperCase()} WARD` : lga.toUpperCase();
+      const lgaDisplay = lga ? lga.toUpperCase() : "[YOUR LGA]";
+      const locationText = wardRaw ? `${lgaDisplay} · ${wardRaw.toUpperCase()} WARD` : `${lgaDisplay} · [WARD]`;
       ctx.fillText(locationText, 540, 815);
 
       roundRect(270, 850, 540, 66, 33, "#eef8f1", "#0b6e35");
       ctx.fillStyle = "#074f26";
       ctx.font = "800 30px Inter, Arial, sans-serif";
-      ctx.fillText(`PASS ID: ${passId}`, 540, 894);
+      const displayPassId = (nameRaw || lga) ? passId : "OWR-2027-XXXX";
+      ctx.fillText(`PASS ID: ${displayPassId}`, 540, 894);
 
       ctx.fillStyle = "#475569";
       ctx.font = "600 22px Inter, Arial, sans-serif";

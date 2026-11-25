@@ -413,24 +413,36 @@
         lastSavedKey = recordKey;
         statusEl.style.color = "#0b6e35";
         statusEl.textContent = `Pass ${passId} downloaded! Saving to Supporter Database...`;
-        try {
-          const formData = new URLSearchParams();
-          formData.append("entry.1203131147", passId);
-          formData.append("entry.1913888307", fullName);
-          formData.append("entry.270821178", phone);
-          formData.append("entry.639121192", lga);
-          formData.append("entry.1361106083", ward || "Not specified");
-
-          await fetch(GOOGLE_FORM_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: formData.toString()
-          });
-          statusEl.textContent = `✓ Pass ${passId} saved to Google Sheet & downloaded!`;
-        } catch (err) {
-          statusEl.textContent = `Pass ${passId} downloaded!`;
+                let hiddenFrame = document.getElementById("gform_frame");
+        if (!hiddenFrame) {
+          hiddenFrame = document.createElement("iframe");
+          hiddenFrame.name = "gform_frame";
+          hiddenFrame.id = "gform_frame";
+          hiddenFrame.style.display = "none";
+          document.body.appendChild(hiddenFrame);
         }
+        const tempForm = document.createElement("form");
+        tempForm.action = GOOGLE_FORM_URL;
+        tempForm.method = "POST";
+        tempForm.target = "gform_frame";
+        const fields = {
+          "entry.1203131147": passId,
+          "entry.1913888307": fullName,
+          "entry.270821178": phone,
+          "entry.639121192": lga,
+          "entry.1361106083": ward || "Not specified"
+        };
+        Object.keys(fields).forEach(k => {
+          const inp = document.createElement("input");
+          inp.type = "hidden";
+          inp.name = k;
+          inp.value = fields[k];
+          tempForm.appendChild(inp);
+        });
+        document.body.appendChild(tempForm);
+        tempForm.submit();
+        setTimeout(() => tempForm.remove(), 1500);
+        statusEl.textContent = `✓ Pass ${passId} saved to Google Sheet & downloaded!`;
       }
     }
 

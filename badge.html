@@ -446,56 +446,67 @@
           }
     }
 
-    function parseSimpleCsv(text) {
-      return text.split(/\r?\n/).filter(Boolean).map(line => {
-        const out = [];
-        let cur = "";
-        let inQuotes = false;
-        for (let i = 0; i < line.length; i++) {
-          const ch = line.charAt(i);
-          if (ch === '"') { inQuotes = !inQuotes; }
-          else if (ch === ',' && !inQuotes) { out.push(cur.trim()); cur = ""; }
-          else { cur += ch; }
-        }
-        out.push(cur.trim());
-        return out;
-      });
-    }
-
-    async function verifyPassId() {
+        function verifyPassId() {
       const query = (document.getElementById("verifyInput").value || "").trim().toUpperCase();
       const box = document.getElementById("verifyResult");
       if (!query) {
         box.className = "verify-result verify-err";
-        box.textContent = "Please enter a Pass ID (for example: OWR-2027-6924).";
+        box.textContent = "Please enter a Pass ID (for example: OWR-2027-7165).";
         return;
       }
       box.className = "verify-result verify-ok";
       box.textContent = "Checking Supporter Database...";
 
-      try {
-        const res = await fetch(`${SUPPORTERS_CSV_URL}&_=${Date.now()}`);
-        const csv = await res.text();
-        const rows = parseSimpleCsv(csv);
-                const match = rows.slice(1).find(cols => (cols.slice(1, 2).shift() || "").toUpperCase() === query);
-        if (match) {
-          const name = match.slice(2, 3).shift() || "";
-          const lga = match.slice(4, 5).shift() || "";
-          const ward = match.slice(5, 6).shift() || "";
-          const details = [name, lga, ward && ward !== "Not specified" ? `${ward} Ward` : ""].filter(Boolean).join(" · ");
-          box.className = "verify-result verify-ok";
-          box.textContent = `✓ VERIFIED 2027 SUPPORTER PASS (${query}): ${details}`;
-        } else {
-          box.className = "verify-result verify-err";
-          box.textContent = `✕ Pass ID "${query}" was not found in the verified database yet.`;
+      const oldScript = document.getElementById("sheet_jsonp");
+      if (oldScript) oldScript.remove();
+
+      window.google = window.google || {};
+      window.google.visualization = window.google.visualization || {};
+      window.google.visualization.Query = {
+        setResponse: function(data) {
+          try {
+            const rows = (data && data.table && data.table.rows) ? data.table.rows : [];
+            let found = null;
+            rows.forEach(r => {
+              const cells = r.c || [];
+              const idCell = cells.slice(1, 2).shift();
+              const idVal = idCell && idCell.v ? String(idCell.v).trim().toUpperCase() : "";
+              if (idVal === query) found = cells;
+            });
+            if (found) {
+              const getCell = (idx) => {
+                const c = found.slice(idx, idx + 1).shift();
+                return c && c.v ? String(c.v).trim() : "";
+              };
+              const name = getCell(2);
+              const lga = getCell(4);
+              const ward = getCell(5);
+              const details = [name, lga, ward && ward !== "Not specified" ? `${ward} Ward` : ""].filter(Boolean).join(" · ");
+              box.className = "verify-result verify-ok";
+              box.textContent = `✓ VERIFIED 2027 SUPPORTER PASS (${query}): ${details}`;
+            } else {
+              box.className = "verify-result verify-err";
+              box.textContent = `✕ Pass ID "${query}" was not found in the verified database yet.`;
+            }
+          } catch (e) {
+            box.className = "verify-result verify-err";
+            box.textContent = "Error reading verification record.";
+          }
         }
-      } catch (err) {
+      };
+
+      const s = document.createElement("script");
+      s.id = "sheet_jsonp";
+      s.src = `https://google.com{Date.now()}`;
+      s.onerror = function() {
         box.className = "verify-result verify-err";
-        box.textContent = "Could not connect to the verification database. Ensure the Google Sheet is shared as Anyone with the link (Viewer).";
-      }
+        box.textContent = "Could not reach Google Sheets. Check internet connection.";
+      };
+      document.body.appendChild(s);
     }
 
     drawBadge();
+    
   </script>
 </body>
 </html>

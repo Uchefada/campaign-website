@@ -247,4 +247,241 @@
     loadAsset("assets/hero.jpg", (img) => { candidateImg = img; drawBadge(); });
     loadAsset("assets/zlp-logo.jpg", (img) => { logoImg = img; drawBadge(); });
 
-    function handlePhotoUpload(e) {
+        function handlePhotoUpload(e) {
+      const file = e.target.files ? e.target.files.item(0) : null;
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          userImg = img;
+          drawBadge();
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function drawCircularImage(img, cx, cy, radius, borderColor, borderWidth) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.clip();
+      const scale = Math.max((radius * 2) / img.width, (radius * 2) / img.height);
+      const w = img.width * scale;
+      const h = img.height * scale;
+      ctx.drawImage(img, cx - w / 2, cy - h / 2, w, h);
+      ctx.restore();
+
+      if (borderColor && borderWidth) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+        ctx.lineWidth = borderWidth;
+        ctx.strokeStyle = borderColor;
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    function roundRect(x, y, w, h, r, fill, stroke) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+      if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 3; ctx.stroke(); }
+    }
+
+    function drawBadge() {
+      const nameRaw = (document.getElementById("supporterName").value || "").trim();
+      const displayName = nameRaw ? nameRaw.toUpperCase() : "PROUD OWERRI SUPPORTER";
+      const lga = document.getElementById("supporterLga").value;
+      const wardRaw = (document.getElementById("supporterWard").value || "").trim();
+
+      const grad = ctx.createLinearGradient(0, 0, 1080, 1350);
+      grad.addColorStop(0, "#064e24");
+      grad.addColorStop(0.55, "#0b6e35");
+      grad.addColorStop(1, "#043819");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1080, 1350);
+
+      roundRect(36, 36, 1008, 1278, 36, null, "#eab308");
+      roundRect(70, 72, 940, 130, 24, "rgba(255,255,255,0.12)", null);
+      if (logoImg) drawCircularImage(logoImg, 145, 137, 46, "#ffffff", 4);
+
+      ctx.fillStyle = "#fde047";
+      ctx.font = "bold 24px Inter, Arial, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("ZENITH LABOUR PARTY (ZLP) · OWERRI 2027", 215, 126);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "800 34px Inter, Arial, sans-serif";
+      ctx.fillText("OFFICIAL GRASSROOTS SUPPORTER PASS", 215, 168);
+
+      if (userImg) {
+        if (candidateImg) drawCircularImage(candidateImg, 360, 395, 145, "#eab308", 8);
+        drawCircularImage(userImg, 720, 395, 145, "#ffffff", 8);
+        ctx.fillStyle = "#fde047";
+        ctx.font = "bold 22px Inter, Arial, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("HON. NNADOZIE CHIKEZIE", 360, 578);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText("VERIFIED SUPPORTER", 720, 578);
+      } else {
+        if (candidateImg) drawCircularImage(candidateImg, 540, 395, 155, "#eab308", 8);
+        ctx.fillStyle = "#fde047";
+        ctx.font = "bold 24px Inter, Arial, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("HON. NNADOZIE CHIKEZIE · FOR HOUSE OF REPS", 540, 588);
+      }
+
+      roundRect(70, 625, 940, 430, 28, "#ffffff", null);
+      ctx.fillStyle = "#0b6e35";
+      ctx.font = "bold 24px Inter, Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("ISSUED TO CONSTITUENCY SUPPORTER", 540, 682);
+
+      ctx.fillStyle = "#0f172a";
+      let fontSize = 54;
+      ctx.font = `800 ${fontSize}px Inter, Arial, sans-serif`;
+      while (ctx.measureText(displayName).width > 860 && fontSize > 30) {
+        fontSize -= 2;
+        ctx.font = `800 ${fontSize}px Inter, Arial, sans-serif`;
+      }
+      ctx.fillText(displayName, 540, 755);
+
+      ctx.fillStyle = "#334155";
+      ctx.font = "700 30px Inter, Arial, sans-serif";
+      const locationText = wardRaw ? `${lga.toUpperCase()} · ${wardRaw.toUpperCase()} WARD` : lga.toUpperCase();
+      ctx.fillText(locationText, 540, 815);
+
+      roundRect(270, 850, 540, 66, 33, "#eef8f1", "#0b6e35");
+      ctx.fillStyle = "#074f26";
+      ctx.font = "800 30px Inter, Arial, sans-serif";
+      ctx.fillText(`PASS ID: ${passId}`, 540, 894);
+
+      ctx.fillStyle = "#475569";
+      ctx.font = "600 22px Inter, Arial, sans-serif";
+      ctx.fillText("Priority Invitation: Constituency Town Halls, Youth & Community Briefings", 540, 968);
+      ctx.fillText("Owerri Municipal · Owerri North · Owerri West Federal Constituency", 540, 1004);
+
+      ctx.fillStyle = "#fde047";
+      ctx.font = "800 34px Inter, Arial, sans-serif";
+      ctx.fillText("I STAND WITH HON. NNADOZIE CHIKEZIE", 540, 1135);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "600 26px Inter, Arial, sans-serif";
+      ctx.fillText("Federal House of Representatives · Owerri Federal Constituency 2027", 540, 1185);
+
+      roundRect(290, 1215, 500, 54, 27, "rgba(0,0,0,0.3)", null);
+      ctx.fillStyle = "#fde047";
+      ctx.font = "bold 24px Inter, Arial, sans-serif";
+      ctx.fillText("honnnadoziechikezie.org/badge.html", 540, 1250);
+    }
+
+    async function registerAndDownload() {
+      const fullName = (document.getElementById("supporterName").value || "").trim();
+      const phone = (document.getElementById("supporterPhone").value || "").trim();
+      const lga = document.getElementById("supporterLga").value;
+      const ward = (document.getElementById("supporterWard").value || "").trim();
+      const consent = document.getElementById("supporterConsent").checked;
+      const statusEl = document.getElementById("saveStatus");
+
+      if (!fullName || !phone) {
+        statusEl.style.color = "#b91c1c";
+        statusEl.textContent = "Please enter your Full Name and WhatsApp/Phone Number first.";
+        return;
+      }
+      if (!consent) {
+        statusEl.style.color = "#b91c1c";
+        statusEl.textContent = "Please tick the consent checkbox to register your Supporter Pass.";
+        return;
+      }
+
+      drawBadge();
+      const slug = fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      const link = document.createElement("a");
+      link.download = `nnadozie-chikezie-2027-pass-${slug || "owerri"}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+
+      const recordKey = `${passId}|${fullName}|${phone}`;
+      if (lastSavedKey !== recordKey) {
+        lastSavedKey = recordKey;
+        statusEl.style.color = "#0b6e35";
+        statusEl.textContent = `Pass ${passId} downloaded! Saving to Supporter Database...`;
+        try {
+          await fetch(FORMSPREE_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify({
+              _subject: `New 2027 Supporter Pass: ${passId} — ${fullName}`,
+              Pass_ID: passId,
+              Full_Name: fullName,
+              WhatsApp_Phone: phone,
+              LGA: lga,
+              Ward: ward || "Not specified",
+              Timestamp: new Date().toISOString()
+            })
+          });
+          statusEl.textContent = `✓ Pass ${passId} registered & downloaded!`;
+        } catch (err) {
+          statusEl.textContent = `Pass ${passId} downloaded!`;
+        }
+      }
+    }
+
+    function parseSimpleCsv(text) {
+      return text.split(/\r?\n/).filter(Boolean).map(line => {
+        const out = [];
+        let cur = "";
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+          const ch = line.charAt(i);
+          if (ch === '"') { inQuotes = !inQuotes; }
+          else if (ch === ',' && !inQuotes) { out.push(cur.trim()); cur = ""; }
+          else { cur += ch; }
+        }
+        out.push(cur.trim());
+        return out;
+      });
+    }
+
+    async function verifyPassId() {
+      const query = (document.getElementById("verifyInput").value || "").trim().toUpperCase();
+      const box = document.getElementById("verifyResult");
+      if (!query) {
+        box.className = "verify-result verify-err";
+        box.textContent = "Please enter a Pass ID (for example: OWR-2027-6294).";
+        return;
+      }
+      box.className = "verify-result verify-ok";
+      box.textContent = "Checking Supporter Database...";
+
+      try {
+        const res = await fetch(`${SUPPORTERS_CSV_URL}&_=${Date.now()}`);
+        const csv = await res.text();
+        const rows = parseSimpleCsv(csv);
+        const match = rows.slice(1).find(cols => cols.some(c => c.toUpperCase() === query));
+        if (match) {
+          const cleanCols = match.filter(c => c && c.toUpperCase() !== query);
+          box.className = "verify-result verify-ok";
+          box.textContent = `✓ VERIFIED 2027 SUPPORTER PASS (${query}): ${cleanCols.join(" · ")}`;
+        } else {
+          box.className = "verify-result verify-err";
+          box.textContent = `✕ Pass ID "${query}" was not found in the verified database yet.`;
+        }
+      } catch (err) {
+        box.className = "verify-result verify-err";
+        box.textContent = "Could not connect to the verification database. Please try again.";
+      }
+    }
+
+    drawBadge();
+  </script>
+</body>
+</html>
+

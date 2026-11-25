@@ -497,7 +497,7 @@
 
       const s = document.createElement("script");
       s.id = "sheet_jsonp";
-      s.src = `https://google.com{Date.now()}`;
+            s.src = "https://google.com" + Date.now();
       s.onerror = function() {
         box.className = "verify-result verify-err";
         box.textContent = "Could not reach Google Sheets. Check internet connection.";

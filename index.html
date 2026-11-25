@@ -288,14 +288,135 @@
   </div>
 </section>
 </main>
-<footer class="site-footer">
-  <div class="container footer-grid">
-    <div><h3>Nnadozie Chikezie</h3><p>Campaign website for Nnadozie Chikezie, candidate for the Federal House of Representatives, Owerri Federal Constituency, 2027.</p></div>
-    <div><h3>Explore</h3><p><a href="about.html">About the Candidate</a></p><p><a href="index.html#gallery">Campaign Gallery</a></p><p><a href="index.html#questions">Ask a Question</a></p><p><a href="index.html#complaints">Complaints &amp; Feedback</a></p></div>
-    <div><h3>Transparency</h3><p><a href="disclaimer.html">Advertising Disclaimer</a></p></div>
-  </div>
-  <div class="container copyright">© 2027 Nnadozie Chikezie Campaign Organization. All rights reserved.</div>
-</footer>
+  <style>
+    .pro-footer {
+      background: #043819;
+      color: #e2e8f0;
+      padding: 44px 0 24px;
+      margin-top: 48px;
+      border-top: 4px solid #eab308;
+    }
+    .pro-footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1.1fr;
+      gap: 28px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    @media (max-width: 780px) {
+      .pro-footer-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+    }
+    .pf-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .pf-brand img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid #eab308;
+      object-fit: cover;
+    }
+    .pf-brand strong {
+      display: block;
+      font-size: 1.08rem;
+      color: #ffffff;
+    }
+    .pf-brand span {
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #fde047;
+      text-transform: uppercase;
+    }
+    .pro-footer h4 {
+      margin: 0 0 12px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #fde047;
+    }
+    .pro-footer p {
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+    .pf-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+    .pf-links a {
+      color: #e2e8f0;
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+    .pf-links a:hover {
+      color: #fde047;
+    }
+    .pf-bottom {
+      padding-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.82rem;
+      color: #94a3b8;
+    }
+  </style>
+
+  <footer class="pro-footer">
+    <div class="container">
+      <div class="pro-footer-grid">
+        <div>
+          <div class="pf-brand">
+            <img src="assets/zlp-logo.jpg" alt="Zenith Labour Party logo" />
+            <div>
+              <strong>Hon. Nnadozie Chikezie</strong>
+              <span>Zenith Labour Party (ZLP) · 2027</span>
+            </div>
+          </div>
+          <p>Candidate for Federal House of Representatives, Owerri Federal Constituency — uniting Owerri Municipal, Owerri North, and Owerri West LGAs for accountable representation.</p>
+        </div>
+
+        <div>
+          <h4>Constituency Portal</h4>
+          <ul class="pf-links">
+            <li><a href="index.html">Home &amp; Manifesto</a></li>
+            <li><a href="about.html">About Nnadozie Chikezie</a></li>
+            <li><a href="wards.html">33 INEC Electoral Wards</a></li>
+            <li><a href="badge.html">Get 2027 Supporter Pass</a></li>
+            <li><a href="results.html">726-Unit Situation Room</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Constituency Desk &amp; Notice</h4>
+          <p>Have a policy question or ward report? Use the direct inquiry and feedback desks on our homepage.</p>
+          <ul class="pf-links">
+            <li><a href="index.html#questions">Ask the Candidate</a></li>
+            <li><a href="index.html#complaints">Complaints &amp; Feedback</a></li>
+            <li><a href="disclaimer.html">Legal &amp; INEC Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pf-bottom">
+        <span>© 2027 Nnadozie Chikezie Campaign Organization. All rights reserved.</span>
+        <span>Owerri Municipal · Owerri North · Owerri West (726 Polling Units)</span>
+      </div>
+    </div>
+  </footer>
 <script>
   document.querySelectorAll('.ajax-campaign-form').forEach(form => {
     form.addEventListener('submit', async function(e) {

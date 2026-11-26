@@ -96,7 +96,80 @@
       <h1>33 INEC Electoral Wards</h1>
       <p>Owerri Federal Constituency covers 33 INEC electoral wards and 726 polling units across three Local Government Areas in Imo State. Tap any LGA below to view its wards.</p>
     </div>
+        <div style="background:#ffffff; border:1.5px solid #15803d; border-radius:16px; padding:20px; margin-bottom:26px; box-shadow:0 8px 24px rgba(0,0,0,0.06);">
+      <div style="font-size:0.8rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:#15803d; margin-bottom:4px;">Voter Verification Tool</div>
+      <h2 style="margin:0 0 6px; font-size:1.35rem; color:#0f172a;">Find Your Polling Unit &amp; Map Location</h2>
+      <p style="margin:0 0 14px; font-size:0.95rem; color:#475569;">Type your school, hall, village, ward, or INEC PU code (e.g., <em>Nekede</em>, <em>Central School</em>, or <em>16-24</em>).</p>
+      <input type="text" id="puFinderInput" placeholder="Search 726 polling units across Owerri..." oninput="searchVoterPU()" style="width:100%; padding:13px 15px; font-size:1rem; border:1.5px solid #cbd5e1; border-radius:10px; box-sizing:border-box;">
+      <div id="puFinderStatus" style="margin-top:8px; font-size:0.84rem; color:#64748b;">Loading 726 polling units...</div>
+      <div id="puFinderResults" style="margin-top:12px; display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
 
+    <script>
+      const PU_SHEET_URL = 'https://docs.' + 'google' + '.com/spreadsheets/d/1En7vVTjjZXwe059hLAkGLRitzKY8wc7sxWOO_oDlia4/gviz/tq?tqx=out:csv';
+      let voterUnits = [];
+
+      function parsePuCsv(text) {
+        const rows = [];
+        let row = [], cell = '', inQuotes = false;
+        for (let i = 0; i < text.length; i++) {
+          const ch = text[i], next = text[i + 1];
+          if (ch === '"' && inQuotes && next === '"') { cell += '"'; i++; }
+          else if (ch === '"') { inQuotes = !inQuotes; }
+          else if (ch === ',' && !inQuotes) { row.push(cell.trim()); cell = ''; }
+          else if ((ch === '\n' || (ch === '\r' && next === '\n')) && !inQuotes) {
+            row.push(cell.trim()); rows.push(row); row = []; cell = '';
+            if (ch === '\r') i++;
+          } else { cell += ch; }
+        }
+        if (cell.length || row.length) { row.push(cell.trim()); rows.push(row); }
+        return rows;
+      }
+
+      fetch(PU_SHEET_URL)
+        .then(r => r.text())
+        .then(csv => {
+          const matrix = parsePuCsv(csv);
+          const headers = matrix[0] || [];
+          voterUnits = matrix.slice(1).map(cols => {
+            const obj = {};
+            headers.forEach((h, idx) => obj[h] = cols[idx] || '');
+            return obj;
+          }).filter(r => r.Polling_Unit || r.PU_Code);
+          document.getElementById('puFinderStatus').textContent = `Ready — ${voterUnits.length} polling units loaded. Start typing above to find yours.`;
+        })
+        .catch(() => {
+          document.getElementById('puFinderStatus').textContent = 'Unable to load polling unit directory right now.';
+        });
+
+      function searchVoterPU() {
+        const q = document.getElementById('puFinderInput').value.trim().toLowerCase();
+        const box = document.getElementById('puFinderResults');
+        const status = document.getElementById('puFinderStatus');
+        if (q.length < 2) {
+          box.innerHTML = '';
+          status.textContent = `Ready — ${voterUnits.length} polling units loaded. Type at least 2 letters to search.`;
+          return;
+        }
+        const matches = voterUnits.filter(r =>
+          (r.Polling_Unit || '').toLowerCase().includes(q) ||
+          (r.PU_Code || '').toLowerCase().includes(q) ||
+          (r.Ward || '').toLowerCase().includes(q) ||
+          (r.LGA || '').toLowerCase().includes(q)
+        );
+        status.textContent = `Found ${matches.length} matching polling unit(s)${matches.length > 15 ? ' (showing top 15)' : ''}:`;
+        box.innerHTML = matches.slice(0, 15).map(r => {
+          const mapQuery = encodeURIComponent(`${r.Polling_Unit}, ${r.Ward}, ${r.LGA}, Imo State, Nigeria`);
+          return `
+            <div style="border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; background:#f8fafc;">
+              <div style="font-weight:700; color:#0f172a; font-size:0.98rem;">${r.Polling_Unit}</div>
+              <div style="font-size:0.84rem; color:#475569; margin:4px 0 8px;"><strong>Code:</strong> ${r.PU_Code} · <strong>Ward:</strong> ${r.Ward} · <strong>LGA:</strong> ${r.LGA}</div>
+              <a href="https://google.com{mapQuery}" target="_blank" rel="noopener" style="display:inline-block; background:#15803d; color:#fff; text-decoration:none; font-size:0.82rem; font-weight:700; padding:6px 12px; border-radius:999px;">📍 Open in Google Maps</a>
+            </div>
+          `;
+        }).join('');
+      }
+            </script>
     <div class="lga-stack">
       <details class="lga-card" open>
         <summary>

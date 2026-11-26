@@ -9,19 +9,29 @@ document.querySelectorAll('.nav-links a').forEach(link=>{
 });
 document.addEventListener("DOMContentLoaded", () => {
   const videos = document.querySelectorAll(".scroll-video");
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       const video = entry.target;
       if (entry.isIntersecting) {
-        if (video.dataset.src && !video.src) {
-          video.src = video.dataset.src;
-          video.load();
-        }
         video.play().catch(() => {});
       } else {
         video.pause();
+        video.muted = true; // Re-mutes when scrolled away so sound doesn't overlap
       }
     });
   }, { threshold: 0.5 });
-  videos.forEach((video) => observer.observe(video));
+
+  videos.forEach((video) => {
+    observer.observe(video);
+
+    // Tap anywhere on the video to unmute/mute
+    video.style.cursor = "pointer";
+    video.addEventListener("click", () => {
+      // Mute any other playing video first
+      videos.forEach((v) => { if (v !== video) v.muted = true; });
+      video.muted = !video.muted;
+      video.play().catch(() => {});
+    });
+  });
 });

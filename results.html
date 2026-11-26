@@ -183,7 +183,15 @@
       <strong id="pu-progress">Loading situation room feed...</strong>
       <button type="button" id="refresh-btn" class="btn btn-secondary" style="padding:8px 14px; font-size:0.9rem;">↻ Refresh Live Figures</button>
     </div>
+          <div style="background:#e2e8f0; border-radius:999px; height:10px; overflow:hidden; margin:10px 0 20px;">
+        <div id="pu-progress-bar" style="background:#15803d; height:100%; width:0%; transition:width 0.4s ease;"></div>
+      </div>
 
+      <div id="vote-share-wrap" style="display:none; background:#fff; border:1px solid rgba(0,0,0,0.1); border-radius:12px; padding:14px 16px; margin-bottom:20px;">
+        <div style="font-size:0.82rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; opacity:0.75; margin-bottom:8px;">Live Vote Share Breakdown</div>
+        <div id="vote-share-bar" style="display:flex; height:14px; border-radius:999px; overflow:hidden; background:#f1f5f9;"></div>
+        <div id="vote-share-legend" style="display:flex; flex-wrap:wrap; gap:10px 16px; margin-top:10px; font-size:0.82rem; font-weight:600;"></div>
+      </div>
     <div class="tally-grid" id="tally-grid"></div>
 
     <div class="filter-bar">

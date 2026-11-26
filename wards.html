@@ -130,12 +130,12 @@
         .then(r => r.text())
         .then(csv => {
           const matrix = parsePuCsv(csv);
-          const headers = matrix[0] || [];
-          voterUnits = matrix.slice(1).map(cols => {
-            const obj = {};
-            headers.forEach((h, idx) => obj[h] = cols[idx] || '');
-            return obj;
-          }).filter(r => r.Polling_Unit || r.PU_Code);
+                    voterUnits = matrix.slice(1).map(cols => ({
+            code: cols[0] || '',
+            lga: cols[1] || '',
+            ward: cols[2] || '',
+            unit: cols[3] || ''
+          })).filter(r => r.unit || r.code);
           document.getElementById('puFinderStatus').textContent = `Ready — ${voterUnits.length} polling units loaded. Start typing above to find yours.`;
         })
         .catch(() => {
@@ -152,18 +152,18 @@
           return;
         }
         const matches = voterUnits.filter(r =>
-          (r.Polling_Unit || '').toLowerCase().includes(q) ||
-          (r.PU_Code || '').toLowerCase().includes(q) ||
-          (r.Ward || '').toLowerCase().includes(q) ||
-          (r.LGA || '').toLowerCase().includes(q)
+          r.unit.toLowerCase().includes(q) ||
+          r.code.toLowerCase().includes(q) ||
+          r.ward.toLowerCase().includes(q) ||
+          r.lga.toLowerCase().includes(q)
         );
         status.textContent = `Found ${matches.length} matching polling unit(s)${matches.length > 15 ? ' (showing top 15)' : ''}:`;
         box.innerHTML = matches.slice(0, 15).map(r => {
-          const mapQuery = encodeURIComponent(`${r.Polling_Unit}, ${r.Ward}, ${r.LGA}, Imo State, Nigeria`);
+          const mapQuery = encodeURIComponent(`${r.unit}, ${r.ward}, ${r.lga}, Imo State, Nigeria`);
           return `
             <div style="border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; background:#f8fafc;">
-              <div style="font-weight:700; color:#0f172a; font-size:0.98rem;">${r.Polling_Unit}</div>
-              <div style="font-size:0.84rem; color:#475569; margin:4px 0 8px;"><strong>Code:</strong> ${r.PU_Code} · <strong>Ward:</strong> ${r.Ward} · <strong>LGA:</strong> ${r.LGA}</div>
+              <div style="font-weight:700; color:#0f172a; font-size:0.98rem;">${r.unit}</div>
+              <div style="font-size:0.84rem; color:#475569; margin:4px 0 8px;"><strong>Code:</strong> ${r.code} · <strong>Ward:</strong> ${r.ward} · <strong>LGA:</strong> ${r.lga}</div>
               <a href="https://google.com{mapQuery}" target="_blank" rel="noopener" style="display:inline-block; background:#15803d; color:#fff; text-decoration:none; font-size:0.82rem; font-weight:700; padding:6px 12px; border-radius:999px;">📍 Open in Google Maps</a>
             </div>
           `;

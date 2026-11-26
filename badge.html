@@ -575,17 +575,44 @@
   ]
 };
 
-function updateWardSuggestions() {
+function showWardPopup() {
+  const input = document.getElementById("supporterWard");
+  const popup = document.getElementById("wardPopup");
   const lga = document.getElementById("supporterLga").value;
-  const datalist = document.getElementById("wardSuggestions");
-  if (!datalist) return;
-  const wards = WARDS_BY_LGA[lga] || Object.values(WARDS_BY_LGA).flat();
-  datalist.innerHTML = wards.map(w => `<option value="${w}">`).join("");
+  const query = input.value.trim().toLowerCase();
+
+  if (!query) {
+    popup.style.display = "none";
+    return;
+  }
+
+  const allWards = WARDS_BY_LGA[lga] || Object.values(WARDS_BY_LGA).flat();
+  const matches = allWards.filter(w => w.toLowerCase().includes(query));
+
+  if (matches.length === 0) {
+    popup.style.display = "none";
+    return;
+  }
+
+  popup.innerHTML = matches.map(w =>
+    `<div onclick="selectWard('${w}')" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #f1f5f9; font-size:15px; color:#0f172a;">${w}</div>`
+  ).join("");
+  popup.style.display = "block";
 }
 
-document.getElementById("supporterLga").addEventListener("change", updateWardSuggestions);
-updateWardSuggestions();
-    
+function selectWard(wardName) {
+  document.getElementById("supporterWard").value = wardName;
+  document.getElementById("wardPopup").style.display = "none";
+  drawBadge();
+}
+
+document.addEventListener("click", (e) => {
+  const popup = document.getElementById("wardPopup");
+  const input = document.getElementById("supporterWard");
+  if (popup && e.target !== popup && e.target !== input) {
+    popup.style.display = "none";
+  }
+});
   </script>
 </body>
 </html>

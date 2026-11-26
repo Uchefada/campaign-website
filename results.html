@@ -292,14 +292,16 @@ function renderDashboard() {
   document.getElementById('pu-progress').textContent =
     `Showing ${filtered.length} Polling Unit(s) · ${reportedCount} Reported`;
 
-  const totals = { ZLP: 0, APC: 0, PDP: 0, LP: 0, APGA: 0 };
-  filtered.forEach(r => {
-    totals.ZLP += num(r.ZLP);
-    totals.APC += num(r.APC);
-    totals.PDP += num(r.PDP);
-    totals.LP += num(r.LP);
-    totals.APGA += num(r.APGA);
-  });
+        const totals = { ZLP: 0, APC: 0, PDP: 0, LP: 0, APGA: 0, NDC: 0, ADC: 0 };
+      filtered.forEach(r => {
+        totals.ZLP += num(r.ZLP);
+        totals.APC += num(r.APC);
+        totals.PDP += num(r.PDP);
+        totals.LP += num(r.LP);
+        totals.APGA += num(r.APGA);
+        totals.NDC += num(r.NDC);
+        totals.ADC += num(r.ADC);
+      });
   const grandTotal = Object.values(totals).reduce((a, b) => a + b, 0);
   document.getElementById('tally-grid').innerHTML = Object.entries(totals).map(([party, votes]) => {
     const pct = grandTotal > 0 ? ((votes / grandTotal) * 100).toFixed(1) : '0.0';

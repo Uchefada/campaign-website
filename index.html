@@ -180,7 +180,63 @@
     </div>
   </div>
 </section>
+    <section class="section" id="blueprint" style="background:#f8fafc; border-top:1px solid rgba(0,0,0,0.06); border-bottom:1px solid rgba(0,0,0,0.06);">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Legislative &amp; Constituency Roadmap</div>
+          <h2>100-Day Blueprint by LGA</h2>
+          <p class="lead">Select your Local Government Area to explore targeted interventions for Owerri Federal Constituency.</p>
+        </div>
 
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+          <button type="button" class="lga-tab-btn" onclick="switchLgaPlan('municipal', this)" style="padding:10px 18px; border-radius:999px; border:2px solid #15803d; background:#15803d; color:#fff; font-weight:700; cursor:pointer;">Owerri Municipal</button>
+          <button type="button" class="lga-tab-btn" onclick="switchLgaPlan('north', this)" style="padding:10px 18px; border-radius:999px; border:2px solid #cbd5e1; background:#fff; color:#0f172a; font-weight:700; cursor:pointer;">Owerri North</button>
+          <button type="button" class="lga-tab-btn" onclick="switchLgaPlan('west', this)" style="padding:10px 18px; border-radius:999px; border:2px solid #cbd5e1; background:#fff; color:#0f172a; font-weight:700; cursor:pointer;">Owerri West</button>
+        </div>
+
+        <div id="plan-municipal" class="lga-plan-panel" style="background:#fff; border:1px solid rgba(0,0,0,0.1); border-radius:14px; padding:22px; box-shadow:0 6px 20px rgba(0,0,0,0.04);">
+          <h3 style="margin-top:0; color:#15803d;">Owerri Municipal (11 Wards) — Urban Enterprise &amp; Youth Innovation</h3>
+          <ul style="line-height:1.7; padding-left:20px; margin-bottom:0;">
+            <li><strong>SME &amp; Market Digitization Grants:</strong> Micro-grants and business registration support for traders across Relief Market, Ekeonunwa, and New Market.</li>
+            <li><strong>Owerri Tech &amp; Global Skills Hub:</strong> Digital skills, remote work training, and verified international study/career pathways for urban youths.</li>
+            <li><strong>Urban Drainage &amp; Flood Advocacy:</strong> Federal legislative intervention for stormwater infrastructure across Aladinma, Ikenegbu, and World Bank housing areas.</li>
+          </ul>
+        </div>
+
+        <div id="plan-north" class="lga-plan-panel" style="display:none; background:#fff; border:1px solid rgba(0,0,0,0.1); border-radius:14px; padding:22px; box-shadow:0 6px 20px rgba(0,0,0,0.04);">
+          <h3 style="margin-top:0; color:#15803d;">Owerri North (12 Wards) — Agro-Processing, Roads &amp; Primary Healthcare</h3>
+          <ul style="line-height:1.7; padding-left:20px; margin-bottom:0;">
+            <li><strong>Rural-Urban Link Road Rehabilitation:</strong> Federal constituency project prioritization for Emekuku, Emii, Ulakwo, Agbala, and Obibiezena access roads.</li>
+            <li><strong>Agro-Enterprise &amp; Cooperative Support:</strong> Modern processing tools and interest-free cooperative funding for farmers and women-led enterprises.</li>
+            <li><strong>Primary Health &amp; School Upgrades:</strong> Solar power and essential equipment upgrades for community health centers and public schools across all 12 wards.</li>
+          </ul>
+        </div>
+
+        <div id="plan-west" class="lga-plan-panel" style="display:none; background:#fff; border:1px solid rgba(0,0,0,0.1); border-radius:14px; padding:22px; box-shadow:0 6px 20px rgba(0,0,0,0.04);">
+          <h3 style="margin-top:0; color:#15803d;">Owerri West (10 Wards) — Student Corridor, Erosion Control &amp; Light Industry</h3>
+          <ul style="line-height:1.7; padding-left:20px; margin-bottom:0;">
+            <li><strong>FUTO &amp; FedPoly Nekede Student Innovation Fund:</strong> Research grants, startup incubation, and safer hostel-corridor lighting and security advocacy.</li>
+            <li><strong>Erosion &amp; Ecological Fund Intervention:</strong> Direct National Assembly push for urgent gully erosion control in Nekede, Ihiagwa, Obinze, and Avu.</li>
+            <li><strong>Artisan &amp; Industrial Cluster Support:</strong> Modern equipment and power solutions for fabricators, mechanics, and SMEs in Irete, Umuguma, and Orogwe.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      function switchLgaPlan(lga, btn) {
+        document.querySelectorAll('.lga-plan-panel').forEach(p => p.style.display = 'none');
+        document.getElementById('plan-' + lga).style.display = 'block';
+        document.querySelectorAll('.lga-tab-btn').forEach(b => {
+          b.style.background = '#fff';
+          b.style.color = '#0f172a';
+          b.style.borderColor = '#cbd5e1';
+        });
+        btn.style.background = '#15803d';
+        btn.style.color = '#fff';
+        btn.style.borderColor = '#15803d';
+      }
+            </script>
 <section class="section" id="gallery">
   <div class="container">
     <div class="section-head">

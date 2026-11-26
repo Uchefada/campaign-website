@@ -519,7 +519,38 @@
       };
       document.body.appendChild(s);
     }
+      async function shareBadge() {
+      const fullName = (document.getElementById("supporterName").value || "").trim();
+      const statusEl = document.getElementById("saveStatus");
+      drawBadge();
 
+      const badgeUrl = ["https:/", "honnnadoziechikezie.org", "badge.html"].join("/");
+      const shareText = `I stand with Hon. Nnadozie Chikezie (ZLP) for Federal House of Representatives, Owerri Federal Constituency 2027! Generate your own 2027 Supporter Pass here: ${badgeUrl}`;
+
+      try {
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+        const slug = (fullName || "owerri").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        const file = new File([blob], `nnadozie-chikezie-2027-pass-${slug}.png`, { type: "image/png" });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            title: "My 2027 Supporter Pass — Hon. Nnadozie Chikezie",
+            text: shareText,
+            files: [file]
+          });
+          return;
+        }
+      } catch (err) {
+        if (err && err.name === "AbortError") return;
+      }
+
+      const waUrl = ["https:/", "api.whatsapp.com", "send?text="].join("/") + encodeURIComponent(shareText);
+      window.open(waUrl, "_blank");
+      if (statusEl) {
+        statusEl.style.color = "#0b6e35";
+        statusEl.textContent = "Opening WhatsApp to share your Supporter Pass link!";
+      }
+      }
     drawBadge();
     
   </script>

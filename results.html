@@ -299,7 +299,9 @@ function renderDashboard() {
   const reportedCount = filtered.filter(r => r.Status.toLowerCase() === 'reported').length;
   document.getElementById('pu-progress').textContent =
     `Showing ${filtered.length} Polling Unit(s) · ${reportedCount} Reported`;
-
+   const pctReported = filtered.length > 0 ? Math.round((reportedCount / filtered.length) * 100) : 0;
+      const pBar = document.getElementById('pu-progress-bar');
+      if (pBar) pBar.style.width = `${pctReported}%`;
         const totals = { ZLP: 0, APC: 0, PDP: 0, LP: 0, APGA: 0, NDC: 0, ADC: 0 };
       filtered.forEach(r => {
         totals.ZLP += num(r.ZLP);

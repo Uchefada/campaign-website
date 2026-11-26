@@ -321,7 +321,23 @@ function renderDashboard() {
       <div class="tally-pct">${pct}% of tallied votes</div>
     </div>`;
   }).join('');
-
+        const partyColors = { ZLP: '#15803d', APC: '#0284c7', PDP: '#dc2626', LP: '#eab308', APGA: '#7c3aed', NDC: '#ea580c', ADC: '#0d9488' };
+      const shareWrap = document.getElementById('vote-share-wrap');
+      if (shareWrap) {
+        if (grandTotal > 0) {
+          shareWrap.style.display = 'block';
+          document.getElementById('vote-share-bar').innerHTML = Object.entries(totals)
+            .filter(([, v]) => v > 0)
+            .map(([p, v]) => `<div title="${p}: ${((v / grandTotal) * 100).toFixed(1)}%" style="width:${(v / grandTotal) * 100}%; background:${partyColors[p] || '#64748b'};"></div>`)
+            .join('');
+          document.getElementById('vote-share-legend').innerHTML = Object.entries(totals)
+            .filter(([, v]) => v > 0)
+            .map(([p, v]) => `<span style="display:inline-flex; align-items:center; gap:5px;"><i style="width:10px; height:10px; border-radius:50%; background:${partyColors[p] || '#64748b'}; display:inline-block;"></i>${p} (${((v / grandTotal) * 100).toFixed(1)}%)</span>`)
+            .join('');
+        } else {
+          shareWrap.style.display = 'none';
+        }
+    }
   const listEl = document.getElementById('pu-list');
   if (!filtered.length) {
     listEl.innerHTML = '<div class="pu-card">No polling units match your current filter.</div>';

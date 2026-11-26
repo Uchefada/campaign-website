@@ -172,11 +172,11 @@
                  </select>
         </div>
 
-                  <div class="field-group">
+        <div class="field-group" style="position: relative;">
             <label for="supporterWard">Electoral Ward</label>
-            <input type="text" id="supporterWard" list="wardSuggestions" placeholder="Start typing your ward..." oninput="drawBadge()">
-            <datalist id="wardSuggestions"></datalist>
-                  </div>
+            <input type="text" id="supporterWard" autocomplete="off" placeholder="Start typing your ward..." oninput="showWardPopup(); drawBadge();">
+            <div id="wardPopup" style="display:none; position:absolute; left:0; right:0; top:100%; z-index:99; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; box-shadow:0 8px 20px rgba(0,0,0,0.12); max-height:190px; overflow-y:auto; margin-top:4px;"></div>
+                    </div>
 
         <div class="field-group">
           <label for="supporterPhoto">Upload Your Photo / Selfie (Optional)</label>

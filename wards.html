@@ -126,16 +126,21 @@
         return rows;
       }
 
-      fetch(PU_SHEET_URL)
+            fetch(PU_SHEET_URL + '&t=' + Date.now())
         .then(r => r.text())
         .then(csv => {
           const matrix = parsePuCsv(csv);
-                    voterUnits = matrix.slice(1).map(cols => ({
-            code: cols[0] || '',
-            lga: cols[1] || '',
-            ward: cols[2] || '',
-            unit: cols[3] || ''
-          })).filter(r => r.unit || r.code);
+          const headers = matrix[0] || [];
+          voterUnits = matrix.slice(1).map(cols => {
+            const obj = {};
+            headers.forEach((h, idx) => obj[h] = cols[idx] || '');
+            return {
+              code: obj.PU_Code || cols[0] || '',
+              lga: obj.LGA || cols[1] || '',
+              ward: obj.Ward || cols[2] || '',
+              unit: obj.Polling_Unit || cols[3] || ''
+            };
+          }).filter(r => r.unit || r.code);
           document.getElementById('puFinderStatus').textContent = `Ready — ${voterUnits.length} polling units loaded. Start typing above to find yours.`;
         })
         .catch(() => {

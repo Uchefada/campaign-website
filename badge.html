@@ -172,10 +172,11 @@
                  </select>
         </div>
 
-        <div class="field-group">
-          <label for="supporterWard">Electoral Ward (Optional)</label>
-          <input type="text" id="supporterWard" placeholder="e.g. Aladinma I / Emekuku I / Nekede" maxlength="30" oninput="drawBadge()" />
-        </div>
+                  <div class="field-group">
+            <label for="supporterWard">Electoral Ward</label>
+            <input type="text" id="supporterWard" list="wardSuggestions" placeholder="Start typing your ward..." oninput="drawBadge()">
+            <datalist id="wardSuggestions"></datalist>
+                  </div>
 
         <div class="field-group">
           <label for="supporterPhoto">Upload Your Photo / Selfie (Optional)</label>

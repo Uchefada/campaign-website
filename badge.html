@@ -246,6 +246,8 @@
       passId = makePassId();
       lastSavedKey = "";
       document.getElementById("saveStatus").textContent = "";
+        const shareBtn = document.getElementById("sharePassBtn");
+   if (shareBtn) shareBtn.style.display = "none";
       drawBadge();
     }
 

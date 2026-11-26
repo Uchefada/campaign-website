@@ -105,7 +105,7 @@
       <div id="puFinderResults" style="margin-top:12px; display:flex; flex-direction:column; gap:10px;"></div>
     </div>
 
-    <script>
+        <script>
       const PU_SHEET_URL = 'https://docs.' + 'google' + '.com/spreadsheets/d/1En7vVTjjZXwe059hLAkGLRitzKY8wc7sxWOO_oDlia4/gviz/tq?tqx=out:csv';
       let voterUnits = [];
 
@@ -118,34 +118,37 @@
           else if (ch === '"') { inQuotes = !inQuotes; }
           else if (ch === ',' && !inQuotes) { row.push(cell.trim()); cell = ''; }
           else if ((ch === '\n' || (ch === '\r' && next === '\n')) && !inQuotes) {
-            row.push(cell.trim()); rows.push(row); row = []; cell = '';
             if (ch === '\r') i++;
+            row.push(cell.trim());
+            if (row.some(c => c !== '')) rows.push(row);
+            row = []; cell = '';
           } else { cell += ch; }
         }
         if (cell.length || row.length) { row.push(cell.trim()); rows.push(row); }
         return rows;
       }
 
-            fetch(PU_SHEET_URL + '&t=' + Date.now())
-        .then(r => r.text())
-        .then(csv => {
-          const matrix = parsePuCsv(csv);
+      async function loadVoterUnits() {
+        const status = document.getElementById('puFinderStatus');
+        try {
+          const res = await fetch(PU_SHEET_URL + '&t=' + Date.now());
+          const csvText = await res.text();
+          if (csvText.trim().startsWith('<')) {
+            status.textContent = 'Sheet returned HTML. Check sharing permissions.';
+            return;
+          }
+          const matrix = parsePuCsv(csvText);
           const headers = matrix[0] || [];
           voterUnits = matrix.slice(1).map(cols => {
             const obj = {};
             headers.forEach((h, idx) => obj[h] = cols[idx] || '');
-            return {
-              code: obj.PU_Code || cols[0] || '',
-              lga: obj.LGA || cols[1] || '',
-              ward: obj.Ward || cols[2] || '',
-              unit: obj.Polling_Unit || cols[3] || ''
-            };
-          }).filter(r => r.unit || r.code);
-          document.getElementById('puFinderStatus').textContent = `Ready — ${voterUnits.length} polling units loaded. Start typing above to find yours.`;
-        })
-        .catch(() => {
-          document.getElementById('puFinderStatus').textContent = 'Unable to load polling unit directory right now.';
-        });
+            return obj;
+          }).filter(r => r.LGA || r.Polling_Unit);
+          status.textContent = `Ready — ${voterUnits.length} polling units loaded. Start typing above to find yours.`;
+        } catch (e) {
+          status.textContent = 'Unable to load polling unit directory right now.';
+        }
+      }
 
       function searchVoterPU() {
         const q = document.getElementById('puFinderInput').value.trim().toLowerCase();
@@ -157,25 +160,26 @@
           return;
         }
         const matches = voterUnits.filter(r =>
-          r.unit.toLowerCase().includes(q) ||
-          r.code.toLowerCase().includes(q) ||
-          r.ward.toLowerCase().includes(q) ||
-          r.lga.toLowerCase().includes(q)
+          (r.Polling_Unit || '').toLowerCase().includes(q) ||
+          (r.PU_Code || '').toLowerCase().includes(q) ||
+          (r.Ward || '').toLowerCase().includes(q) ||
+          (r.LGA || '').toLowerCase().includes(q)
         );
         status.textContent = `Found ${matches.length} matching polling unit(s)${matches.length > 15 ? ' (showing top 15)' : ''}:`;
         box.innerHTML = matches.slice(0, 15).map(r => {
-          const mapQuery = encodeURIComponent(`${r.unit}, ${r.ward}, ${r.lga}, Imo State, Nigeria`);
+          const mapQuery = encodeURIComponent(`${r.Polling_Unit}, ${r.Ward}, ${r.LGA}, Imo State, Nigeria`);
           return `
             <div style="border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; background:#f8fafc;">
-              <div style="font-weight:700; color:#0f172a; font-size:0.98rem;">${r.unit}</div>
-              <div style="font-size:0.84rem; color:#475569; margin:4px 0 8px;"><strong>Code:</strong> ${r.code} · <strong>Ward:</strong> ${r.ward} · <strong>LGA:</strong> ${r.lga}</div>
+              <div style="font-weight:700; color:#0f172a; font-size:0.98rem;">${r.Polling_Unit || 'Unnamed Polling Unit'}</div>
+              <div style="font-size:0.84rem; color:#475569; margin:4px 0 8px;"><strong>Code:</strong> ${r.PU_Code || 'N/A'} · <strong>Ward:</strong> ${r.Ward || ''} · <strong>LGA:</strong> ${r.LGA || ''}</div>
               <a href="https://google.com{mapQuery}" target="_blank" rel="noopener" style="display:inline-block; background:#15803d; color:#fff; text-decoration:none; font-size:0.82rem; font-weight:700; padding:6px 12px; border-radius:999px;">📍 Open in Google Maps</a>
             </div>
           `;
         }).join('');
       }
-            </script>
-    <div class="lga-stack">
+
+      loadVoterUnits();
+        </script>
       <details class="lga-card" open>
         <summary>
           <span>

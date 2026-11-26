@@ -557,6 +557,34 @@
       }
       }
     drawBadge();
+    const WARDS_BY_LGA = {
+  "Owerri Municipal LGA": [
+    "Aladinma I", "Aladinma II", "Azuzi I", "Azuzi II", "Azuzi III",
+    "Azuzi IV", "GRA / Prefab", "Ikenegbu I", "Ikenegbu II",
+    "New Owerri I", "New Owerri II"
+  ],
+  "Owerri North LGA": [
+    "Agbala / Ulakwo", "Akwakuma", "Amakohia", "Awaka / Ihitte-Ogada",
+    "Egbu", "Emekuku I", "Emekuku II", "Emii", "Naze",
+    "Obibiezena", "Orji", "Uratta I", "Uratta II"
+  ],
+  "Owerri West LGA": [
+    "Amakohia-Ubi", "Avu", "Eziobodo", "Ihiagwa", "Irete",
+    "Nekede", "Obinze", "Oforola", "Okolochi", "Okuku",
+    "Orogwe", "Umuguma"
+  ]
+};
+
+function updateWardSuggestions() {
+  const lga = document.getElementById("supporterLga").value;
+  const datalist = document.getElementById("wardSuggestions");
+  if (!datalist) return;
+  const wards = WARDS_BY_LGA[lga] || Object.values(WARDS_BY_LGA).flat();
+  datalist.innerHTML = wards.map(w => `<option value="${w}">`).join("");
+}
+
+document.getElementById("supporterLga").addEventListener("change", updateWardSuggestions);
+updateWardSuggestions();
     
   </script>
 </body>

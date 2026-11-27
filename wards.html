@@ -172,7 +172,7 @@
             <div style="border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; background:#f8fafc;">
               <div style="font-weight:700; color:#0f172a; font-size:0.98rem;">${r.Polling_Unit || 'Unnamed Polling Unit'}</div>
               <div style="font-size:0.84rem; color:#475569; margin:4px 0 8px;"><strong>Code:</strong> ${r.PU_Code || 'N/A'} · <strong>Ward:</strong> ${r.Ward || ''} · <strong>LGA:</strong> ${r.LGA || ''}</div>
-              <a href="https://google.com${mapQuery}" target="_blank" rel="noopener" style="display:inline-block; background:#15803d; color:#fff; text-decoration:none; font-size:0.82rem; font-weight:700; padding:6px 12px; border-radius:999px;">📍 Open in Google Maps</a>
+              <a href="https://google.com/maps/search/?api${mapQuery}" target="_blank" rel="noopener" style="display:inline-block; background:#15803d; color:#fff; text-decoration:none; font-size:0.82rem; font-weight:700; padding:6px 12px; border-radius:999px;">📍 Open in Google Maps</a>
             </div>
           `;
         }).join('');
